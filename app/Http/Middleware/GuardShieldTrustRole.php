@@ -24,8 +24,6 @@ class GuardShieldTrustRole
 
         $roles = $user->roles()->whereIn('name', $role);
 
-        dd($user->roles()->get());
-
         if($roles->doesntExist())
             abort(403, "Access Unauthorized!");
 
