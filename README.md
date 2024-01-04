@@ -4,7 +4,7 @@
 
 > > Passo 1: Copie todo os arquivos para a pasta raiz do seu projeto laravel,
 > > 
-> > Passo 2: adicione a classe ```php GuardShieldServiceProvider::class``` ao app.php que fica localizado em config/app.php.
+> > Passo 2: adicione a classe ```GuardShieldServiceProvider::class``` ao app.php que fica localizado em config/app.php.
 > > Passo 3: adicione a trait ( GuardShield ) e o parâmetro ( protected $with = ['roles']; ) a model User.php localizado em Models/User.php
 > > Passo 4: execute o comando php artisan migrate, para criar as tabelas: guard_shield_roles, guard_shield_role_user, guard_shield_assigns, guard_shield_permissions
 
