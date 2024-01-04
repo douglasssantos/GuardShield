@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 
 class GuardShield
 {
@@ -25,16 +26,26 @@ class GuardShield
     public static function generateGates()
     {
         foreach (static::allPermissions() as $permission){
-            Gate::define($permission->name, fn (User $user) => static::gateAllows($user, $permission->key));
+            Gate::define($permission->name,
+            fn (User $user, $inRole = null) => static::gateAllows($user, $permission->key, $inRole));
         }
 
     }
 
-    public static function gateAllows(User $user, $permission)
+    public static function gateAllows(User $user, $permission, string|array $inRole = null)
     {
         $allow = false;
 
-        foreach ($user->roles()->get() as $role){
+        $roles = $user->roles();
+
+        if(!empty($inRole)){
+
+            if($roles->whereIn('key', static::hasRoleKeyName($inRole))->doesntExist())
+                return false;
+
+        }
+
+        foreach ($roles->get() as $role){
 
             $permission = $role->permissions()->where("key", $permission);
 
@@ -45,35 +56,43 @@ class GuardShield
         return $allow;
     }
 
-    public static function allows(string|array $abilities)
+    public static function hasRoleKeyName(string|array $keyName)
+    {
+        if(is_string($keyName) && !empty(trim($keyName)))
+            return [ Str::slug($keyName) ];
+
+        return array_map( fn ($value) => Str::slug($value), $keyName );
+    }
+
+    public static function allows(string|array $abilities, $inRole = null)
     {
         if(is_string($abilities) && !empty(trim($abilities)))
-            return Gate::allows($abilities);
+            return Gate::allows($abilities, $inRole);
 
         foreach ($abilities as $ability) {
-            if(!Gate::allows($ability)) return false;
+            if(!Gate::allows($ability, $inRole)) return false;
         }
 
         return true;
     }
 
-    public static function allowsAtLeastOne(array $abilities)
+    public static function allowsAtLeastOne(array $abilities, $inRole = null)
     {
         foreach ($abilities as $ability) {
-            if(Gate::allows($ability)) return true;
+            if(Gate::allows($ability, $inRole)) return true;
         }
 
         return false;
     }
 
-    public static function denies(string|array $abilities)
+    public static function denies(string|array $abilities, $inRole = null)
     {
-        return !static::allows($abilities);
+        return !static::allows($abilities, $inRole);
     }
 
-    public static function deniesAtLeastOne(array $abilities)
+    public static function deniesAtLeastOne(array $abilities, $inRole = null)
     {
-        return !static::allowsAtLeastOne($abilities);
+        return !static::allowsAtLeastOne($abilities, $inRole);
     }
 
 
