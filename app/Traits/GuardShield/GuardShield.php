@@ -33,6 +33,7 @@ trait GuardShield
 
     }
 
+
     public function roles()
     {
         return $this->belongsToMany(GuardShieldRole::class)
