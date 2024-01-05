@@ -1,10 +1,10 @@
 <?php
 
-use App\Models\GuardShieldPermission;
-use App\Models\GuardShieldRole;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Larakeeps\GuardShield\Models\GuardShieldPermission;
+use Larakeeps\GuardShield\Models\GuardShieldRole;
 
 return new class extends Migration
 {

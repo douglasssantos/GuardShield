@@ -1,0 +1,41 @@
+{
+    "name": "larakeeps/guard-shield",
+    "description": "GuardShield é um repositório laravel com a função de aplicar regras de permissionamento, utilizando agrupamento de regras e permissões.",
+    "authors": [
+        {
+            "name": "Douglas S. Santos",
+            "email": "douglassantos2127@gmail.com"
+        }
+    ],
+    "license": "MIT",
+    "type": "library",
+    "require": {
+        "illuminate/support": "^10.10",
+        "illuminate/http": "^10.10",
+        "illuminate/database": "^v10.10"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.*",
+        "phpunit/phpunit": "^10.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Larakeeps\\GuardShield\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Larakeeps\\GuardShield\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Larakeeps\\GuardShield\\Providers\\LocationsServiceProvider"
+            ],
+            "aliases": {
+                "GuardShield" : "Larakeeps\\GuardShield\\Facades\\GuardShield"
+            }
+        }
+    }
+}

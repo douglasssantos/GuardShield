@@ -25,9 +25,10 @@ protected $middlewareAliases = [
 ```
 
 Terceira etapa adicione a trait e o parâmetro necessario a sua model. Abra `Models/User.php`
+
 ```php
 
-use App\Traits\GuardShield\GuardShield;
+use App\Traits\GuardShield;
 
 class User extends Authenticatable
 {
@@ -98,9 +99,10 @@ $request->user()->assignRole("Administrador");
 ```
 
 **Como Usar o GuardShield**
+
 ```php
 use Illuminate\Support\Facades\Gate;
-use App\Facades\GuardShield;
+use App\Facades\GuardShieldService;
 
 // Usando Gates
 if(Gate::allows('Editar Usuário')){
@@ -115,12 +117,12 @@ if(Gate::allows('Editar Usuário')){
 //====================================================
 
 // Usando GuardShield
-if(GuardShield::allows('Editar Usuário')){
+if(GuardShieldService::allows('Editar Usuário')){
     return "Usuário contem a permissão necessária para executar a ação."
 }
 
 // Verificar se o usuário tem a permissão e se a permissão faz parte de um grupo de permissões
-if(GuardShield::allows('Editar Usuário', "Administrador")){
+if(GuardShieldService::allows('Editar Usuário', "Administrador")){
     return "Usuário contem a permissão necessária para executar a ação."
 }
 

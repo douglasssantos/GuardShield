@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace Larakeeps\GuardShield\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\Response;
 
 class GuardShieldTrustRole
 {
@@ -14,7 +12,7 @@ class GuardShieldTrustRole
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, ...$role): Response
+    public function handle(Request $request, Closure $next, ...$role)
     {
 
         $user = $request->user();

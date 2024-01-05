@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace Larakeeps\GuardShield\Models;
 
-use hisorange\BrowserDetect\Exceptions\Exception;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -16,6 +16,11 @@ class GuardShieldRole extends Model
     protected $guarded = ["id"];
 
     protected $hidden = ['id', 'pivot', "created_at", "updated_at"];
+
+    public function scopeGetRole($query, $name)
+    {
+        return $query->where('key', Str::slug($name))->first();
+    }
 
     public function scopeNew($query, $name, $description)
     {
@@ -35,7 +40,7 @@ class GuardShieldRole extends Model
             if(empty($permission[0]))
                 throw new Exception('Permission name is empty.');
 
-            $permission = \App\Models\GuardShieldPermission::new($permission[0], $permission[1]);
+            $permission = GuardShieldPermission::new($permission[0], $permission[1]);
 
             $role->assignPermission($permission);
 
@@ -58,7 +63,7 @@ class GuardShieldRole extends Model
             if(empty($permission[0]))
                 throw new Exception('Permission name is empty.');
 
-            $permission = \App\Models\GuardShieldPermission::where('key', $permission[0]);
+            $permission = GuardShieldPermission::where('key', $permission[0]);
 
             if($permission->exists())
                 $role->assignPermission($permission->first());
@@ -71,7 +76,18 @@ class GuardShieldRole extends Model
 
     public function assignPermission(GuardShieldPermission $permission)
     {
-        $this->permissions()->sync($permission, false);
+        if($this->permissions()->syncWithoutDetaching($permission))
+            return true;
+
+        return false;
+    }
+
+    public function unassignPermission(GuardShieldPermission $permission)
+    {
+        if($this->permissions()->detach($permission))
+            return true;
+
+        return false;
     }
 
     public function permissions()

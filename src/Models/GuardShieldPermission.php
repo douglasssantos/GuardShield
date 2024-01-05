@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace Larakeeps\GuardShield\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +19,12 @@ class GuardShieldPermission extends Model
     {
         return $this->belongsToMany(GuardShieldRole::class, "guard_shield_assigns");
     }
+
+    public function scopeGetPermission($query, $name)
+    {
+        return $query->where('key', Str::slug($name))->first();
+    }
+
 
     public function scopeNew($query, $name, $description)
     {

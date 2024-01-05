@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Traits\GuardShield;
+namespace Larakeeps\GuardShield\Traits;
 
-use App\Models\GuardShieldRole;
 use Illuminate\Support\Str;
+use Larakeeps\GuardShield\Models\GuardShieldRole;
 
 trait GuardShield
 {
@@ -29,10 +29,12 @@ trait GuardShield
 
         if(empty($this->id)) $user = $query->first();
 
-        return $user->roles()->syncWithoutDetaching($role);
+        if($user->roles()->syncWithoutDetaching($role))
+            return true;
+
+        return false;
 
     }
-
 
     public function roles()
     {
