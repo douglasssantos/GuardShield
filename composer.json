@@ -15,7 +15,7 @@
         "illuminate/database": "^v10.10"
     },
     "require-dev": {
-        "orchestra/testbench": "^8.*",
+        "orchestra/testbench": "^8.19",
         "phpunit/phpunit": "^10.5"
     },
     "autoload": {
