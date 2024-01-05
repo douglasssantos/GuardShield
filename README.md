@@ -11,7 +11,7 @@ Primeira etapa, copie todo os arquivos para a pasta raiz do seu projeto laravel 
 ```php
 'providers' => [
     // ...
-    App\Providers\GuardShieldServiceProvider::class,
+    Larakeeps\GuardShield\Providers\GuardShieldServiceProvider::class,
 ]
 ```
 
@@ -20,7 +20,7 @@ Segunda etapa, adicione o middleware. Abra `app/Http/Kernel.php` e adicione um n
 ```php
 protected $middlewareAliases = [
     // ...
-    'rolecan' => \App\Http\Middleware\GuardShieldTrustRole::class,
+    'rolecan' => \Larakeeps\GuardShield\Http\Middleware\GuardShieldTrustRole::class,
 ]
 ```
 
@@ -28,7 +28,7 @@ Terceira etapa adicione a trait e o parâmetro necessario a sua model. Abra `Mod
 
 ```php
 
-use App\Traits\GuardShield;
+use Larakeeps\GuardShield\Traits\GuardShield;
 
 class User extends Authenticatable
 {
@@ -46,10 +46,10 @@ php artisan migrate
 ```
 
 
-**Criando Grupo de Regras e Permissões**
+**Criando Grupo de Regras e Permissões Utilizando Model**
 ```php
-use \App\Models\GuardShieldRole;
-use \App\Models\GuardShieldPermission;
+use \Larakeeps\GuardShield\Models\GuardShieldRole;
+use \Larakeeps\GuardShield\Models\GuardShieldPermission;
 
 $role = GuardShieldRole::new("Administrador", "Grupo de regra para administradores."); // Criando um novo grupo de permissões
 $permission = GuardShieldPermission::new("Editar Usuário", "Permissão para editar usuário"); // Criando uma nova permissão
@@ -83,6 +83,46 @@ GuardShieldPermission::setActive("Visualizar Usuário", false);
 
 ```
 
+**Criando Grupo de Regras e Permissões Utilizando Facade**
+```php
+use Larakeeps\GuardShield\Facades\GuardShield;
+
+$role = GuardShield::newRole("Administrador", "Grupo de regra para administradores."); // Criando um novo grupo de permissões
+$permission = GuardShield::newPermission("Editar Usuário", "Permissão para editar usuário"); // Criando uma nova permissão
+$role->assignPermission($permission); // Vinculando a permissão a um grupo de permissões.
+
+// OU
+
+GuardShield::assignPermission($role, $permission);
+
+
+
+//Criando uma Regra, permissões e Vinculando as permissões criadas ao grupo de permissões.
+
+$permissions = [
+    ["Visualizar Usuário", "Permissão para visualizar usuário"],
+    ["Criar Usuário", "Permissão para criar usuário"],
+    ["Editar Usuário", "Permissão para editar usuário"],
+    ["Deletar Usuário", "Permissão para deletar usuário"],
+];
+
+GuardShield::newRoleAndPermissions("Administrador", "Grupo de regra para administradores.", $permissions);
+
+
+
+//Criando uma Regra e Vinculando as permissões já existente ao grupo de permissões criado.
+
+$permissions = ["Visualizar Usuário", "Criar Usuário", "Editar Usuário", "Deletar Usuário"];
+
+GuardShield::newRoleAndAssignPermissions("Administrador", "Grupo de regra para administradores.", $permissions);
+
+// Ativando e Desativando uma permissão
+
+GuardShield::setActivePermission("Visualizar Usuário", false);
+
+
+```
+
 **Atribuir um grupo de regras a usuário**
 ```php
 
@@ -102,7 +142,7 @@ $request->user()->assignRole("Administrador");
 
 ```php
 use Illuminate\Support\Facades\Gate;
-use App\Facades\GuardShieldService;
+use Larakeeps\GuardShield\Facades\GuardShield;
 
 // Usando Gates
 if(Gate::allows('Editar Usuário')){
@@ -117,12 +157,12 @@ if(Gate::allows('Editar Usuário')){
 //====================================================
 
 // Usando GuardShield
-if(GuardShieldService::allows('Editar Usuário')){
+if(GuardShield::allows('Editar Usuário')){
     return "Usuário contem a permissão necessária para executar a ação."
 }
 
 // Verificar se o usuário tem a permissão e se a permissão faz parte de um grupo de permissões
-if(GuardShieldService::allows('Editar Usuário', "Administrador")){
+if(GuardShield::allows('Editar Usuário', "Administrador")){
     return "Usuário contem a permissão necessária para executar a ação."
 }
 
