@@ -4,7 +4,10 @@
 
 ### Este repositório é compativel apenas com laravel: `9.*` and `10.*`
 
+
+
 ## Instalação
+
 
 Primeira Etapa, execute o comando.
 
