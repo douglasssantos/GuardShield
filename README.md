@@ -6,7 +6,13 @@
 
 ## Instalação
 
-Primeira etapa, copie todo os arquivos para a pasta raiz do seu projeto laravel e adicione o service provider. Abra `config/app.php` e adicione um novo item ao array de providers.
+Primeira Etapa, execute o comando.
+
+```shell script
+composer require larakeeps/guard-shield
+```
+
+Segunda etapa, adicione o service provider. Abra `config/app.php` e adicione um novo item ao array de providers.
 
 ```php
 'providers' => [
@@ -15,7 +21,7 @@ Primeira etapa, copie todo os arquivos para a pasta raiz do seu projeto laravel 
 ]
 ```
 
-Segunda etapa, adicione o middleware. Abra `app/Http/Kernel.php` e adicione um novo item ao array de middlewareAliases.
+Terceira etapa, adicione o middleware. Abra `app/Http/Kernel.php` e adicione um novo item ao array de middlewareAliases.
 
 ```php
 protected $middlewareAliases = [
@@ -24,7 +30,7 @@ protected $middlewareAliases = [
 ]
 ```
 
-Terceira etapa adicione a trait e o parâmetro necessario a sua model. Abra `Models/User.php`
+Quarta etapa adicione a trait e o parâmetro necessario a sua model. Abra `Models/User.php`
 
 ```php
 
@@ -40,7 +46,7 @@ class User extends Authenticatable
 }
 ```
 
-Quarta etapa, execute o migrate para criar as tabelas: ```guard_shield_roles, guard_shield_role_user, guard_shield_assigns, guard_shield_permissions```
+Quinta etapa, execute o migrate para criar as tabelas: ```guard_shield_roles, guard_shield_role_user, guard_shield_assigns, guard_shield_permissions```
 ```shell script
 php artisan migrate
 ```
