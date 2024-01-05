@@ -159,7 +159,7 @@ if(Gate::allows('Editar Usuário')){
 }
 
 // Verificar se o usuário tem a permissão e se a permissão faz parte de um grupo de permissões
-if(Gate::allows('Editar Usuário')){
+if(Gate::allows('Editar Usuário', "Administrador")){
     return "Usuário contem a permissão necessária para executar a ação."
 }
 
