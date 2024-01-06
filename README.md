@@ -133,6 +133,189 @@ GuardShield::setActivePermission("Visualizar Usuário", false);
 
 ```
 
+**Verificando a existencia dos grupos de regras e permissões criadas.**
+```php
+use Larakeeps\GuardShield\Facades\GuardShield;
+
+$hasPermission = ["view.user", "create.user", "update.user", "delete.user"];
+
+/** 
+ * 
+ * Poder um ou mais regras passando um array como paramêtro 
+ * O mesmo vale para as permissões
+ * @method static bool hasRoleAndPermission(string|array $role, string|array $permission)
+ * 
+ * */
+$hasRolesAndPermissions = !GuardShield::hasRoleAndPermission('user' , $hasPermission);
+
+if($hasRolesAndPermissions){
+    return "O Grupo de regras e as permissão existem."
+}
+
+
+/** 
+ * 
+ * Verifique se uma ou mais grupos de regras existem. 
+ * @method static bool hasRole(string|array $role)
+ * 
+ * */
+$hasRoles = !GuardShield::hasRole(['administrator', 'user']);
+
+if($hasRoles){
+    return "Os Grupos de regras existem."
+}
+
+
+/** 
+ * 
+ * Verifique se uma ou mais grupos de regras existem. 
+ * @method static bool hasPermission(string|array $role)
+ * 
+ * */
+ 
+$permissions = ["view.user", "create.user", "update.user", "delete.user"];
+$hasPermission = !GuardShield::hasPermission($permissions);
+
+if($hasPermission){
+    return "As permissões existem."
+}
+
+//Metodos Unless para validação.
+
+
+
+
+```
+
+**Visualizando as regras e permissões criadas**
+```php
+use Larakeeps\GuardShield\Facades\GuardShield;
+
+
+
+
+//@method allRoles(): Collection
+return GuardShield::allRoles();
+
+/**
+ * Returned array: 
+ * [
+        {
+            "key": "administrator",
+            "name": "Administrator",
+            "description": "Role to administrator",
+            "permissions": [
+                {
+                    "key": "viewuser",
+                    "name": "view.user",
+                    "description": "Permission to view user.",
+                    "params": null,
+                    "active": true
+                },..
+            ]
+        },
+        {
+            "key": "user",
+            "name": "user",
+            "description": "Role to user",
+            "permissions": [
+                {
+                    "key": "viewuser",
+                    "name": "view.user",
+                    "description": "Permission to view user.",
+                    "params": null,
+                    "active": true
+                },.....
+            ]
+        }
+    ]
+ */
+ 
+// @method getRole(array|string $role): Collection
+return GuardShield::getRole();
+
+/**
+ * Returned array: 
+ * [
+        {
+            "key": "administrator",
+            "name": "Administrator",
+            "description": "Role to administrator",
+            "permissions": [
+                {
+                    "key": "viewuser",
+                    "name": "view.user",
+                    "description": "Permission to view user.",
+                    "params": null,
+                    "active": true
+                },...
+            ]
+        },
+        {
+            "key": "user",
+            "name": "user",
+            "description": "Role to user",
+            "permissions": [
+                {
+                    "key": "viewuser",
+                    "name": "view.user",
+                    "description": "Permission to view user.",
+                    "params": null,
+                    "active": true
+                },...
+            ]
+        }
+    ]
+ */
+ 
+//@method allPermissions(): Collection 
+return GuardShield::allPermissions();
+
+/**
+ * Returned array: 
+ * [
+        {
+        "key": "viewuser",
+        "name": "view.user",
+        "description": "Permission to view user.",
+        "params": null,
+        "active": true
+        },
+        {
+        "key": "createuser",
+        "name": "create.user",
+        "description": "Permission to create user.",
+        "params": null,
+        "active": true
+        },....
+    ]
+ */
+ 
+//@method getPermission(array|string $permission): Collection 
+return GuardShield::getPermission(['view.user', 'create.user']);
+
+/**
+ * Returned array: 
+ * [
+        {
+        "key": "viewuser",
+        "name": "view.user",
+        "description": "Permission to view user.",
+        "params": null,
+        "active": true
+        },
+        {
+        "key": "createuser",
+        "name": "create.user",
+        "description": "Permission to create user.",
+        "params": null,
+        "active": true
+        }
+    ]
+ */
+
+```
+
 **Atribuir um grupo de regras a usuário**
 ```php
 

@@ -3,6 +3,8 @@
 namespace Larakeeps\GuardShield\Services;
 
 use Exception;
+use http\Params;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Larakeeps\GuardShield\Models\Permission;
 use Larakeeps\GuardShield\Models\Role;
@@ -11,15 +13,49 @@ use Illuminate\Support\Str;
 
 class GuardShieldService implements GuardShieldServiceInterface
 {
+    public function abilities(): array
+    {
+        return Gate::abilities();
+    }
 
-    public function allRoles()
+    public function allRoles(): Collection
     {
         return Role::get();
     }
 
-    public function allPermissions(): \Illuminate\Support\Collection
+    public function checkIfPassedValueIsArrayOrString(string|array $keyName): string | array
+    {
+        return is_array($keyName) ? array_map([new Str, "slug"], $keyName) : [Str::slug($keyName)];
+    }
+
+    public function getRole(string|array $role): Collection
+    {
+        return Role::whereIn("key", $this->checkIfPassedValueIsArrayOrString($role))->get();
+    }
+
+    public function hasRole($role): bool
+    {
+        return Role::whereIn("key", $this->checkIfPassedValueIsArrayOrString($role))->exists();
+    }
+
+    public function allPermissions(): Collection
     {
         return Permission::get();
+    }
+
+    public function getPermission(string|array $permission): Collection
+    {
+        return Permission::whereIn("key", $this->checkIfPassedValueIsArrayOrString($permission))->get();
+    }
+
+    public function hasPermission(string|array $permission): bool
+    {
+        return Permission::whereIn("key", $this->checkIfPassedValueIsArrayOrString($permission))->exists();
+    }
+
+    public function hasRoleAndPermission(string|array $role, string|array $permission): bool
+    {
+        return $this->gateHasPermission(null, $permission, $role, false);
     }
 
     public function generateGates(): ?Exception
@@ -37,19 +73,23 @@ class GuardShieldService implements GuardShieldServiceInterface
         }
     }
 
-    public function gateHasPermission($user, $permission, string|array $inRole = null): bool
+    public function gateHasPermission($user, string|array $permission, string|array $inRole = [], $checkUser = true): bool
     {
-        $roles = $user->roles();
+
+        $roles = match ($checkUser){
+            true => $user->roles(),
+            false => Role::with("permissions")
+        };
 
         if(!empty($inRole)){
 
-            if($roles->whereIn('key', $this->hasRoleKeyName($inRole))->doesntExist())
+            if($roles->whereIn('key', $this->checkIfPassedValueIsArrayOrString($inRole))->doesntExist())
                 return false;
 
         }
 
         return $roles->whereHas('permissions',
-            fn ($builder) => $builder->where('key', $permission)
+            fn ($builder) => $builder->whereIn('key', $this->checkIfPassedValueIsArrayOrString($permission))
         )->exists();
     }
 
@@ -61,7 +101,7 @@ class GuardShieldService implements GuardShieldServiceInterface
 
         if(!empty($inRole)){
 
-            if($roles->whereIn('key', $this->hasRoleKeyName($inRole))->doesntExist())
+            if($roles->whereIn('key', $this->checkIfPassedValueIsArrayOrString($inRole))->doesntExist())
                 return false;
 
         }
@@ -85,14 +125,6 @@ class GuardShieldService implements GuardShieldServiceInterface
         return false;
     }
 
-    public function hasRoleKeyName(string|array $keyName): array
-    {
-        if(is_string($keyName) && !empty(trim($keyName)))
-            return [ Str::slug($keyName) ];
-
-        return array_map( fn ($value) => Str::slug($value), $keyName );
-    }
-
     public function allows(string|array $abilities, $inRole = null): bool
     {
         if(is_string($abilities) && !empty(trim($abilities)))
@@ -104,6 +136,7 @@ class GuardShieldService implements GuardShieldServiceInterface
 
         return true;
     }
+
     public function allowsUnless($condition, string|array $abilities, $inRole = null): bool
     {
         if($condition)

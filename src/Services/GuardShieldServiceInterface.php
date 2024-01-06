@@ -3,18 +3,26 @@
 namespace Larakeeps\GuardShield\Services;
 
 use Exception;
+use http\Message\Body;
+use Illuminate\Database\Eloquent\Collection;
 use Larakeeps\GuardShield\Models\Permission;
 use Larakeeps\GuardShield\Models\Role;
 
 interface GuardShieldServiceInterface
 {
-    public function allRoles();
-    public function allPermissions();
+    public function abilities(): array;
+    public function allRoles(): Collection;
+    public function getRole(string|array $role): Collection;
+    public function hasRole(string|array $role): bool;
+    public function allPermissions(): Collection;
+    public function getPermission(string|array $permission): Collection;
+    public function hasPermission(string|array $permission): bool;
     public function generateGates(): ?Exception;
-    public function gateHasPermission($user, $permission, string|array $inRole = null): bool;
+    public function hasRoleAndPermission(string|array $role, string|array $permission): bool;
+    public function gateHasPermission($user, string|array $permission, string|array $inRole = []): bool;
     public function gateAllows($user, $permission, string|array $inRole = null): bool;
     public function gateAllowsUnless($condition, $user, $permission, string|array $inRole = null): bool;
-    public function hasRoleKeyName(string|array $keyName): array;
+    public function checkIfPassedValueIsArrayOrString(string|array $keyName): string|array;
     public function allows(string|array $abilities, $inRole = null): bool;
     public function allowsUnless($condition, string|array $abilities, $inRole = null): bool;
     public function allowsAtLeastOne(array $abilities, $inRole = null): bool;

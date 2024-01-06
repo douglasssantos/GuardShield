@@ -3,18 +3,25 @@
 namespace Larakeeps\GuardShield\Facades;
 
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Facade;
 use Larakeeps\GuardShield\Models\Permission;
 use Larakeeps\GuardShield\Models\Role;
 
 /**
- * @method static void allRoles()
- * @method static void allPermissions()
+ * @method static array abilities()
+ * @method static Collection allRoles()
+ * @method static Collection getRole(string|array $role)
+ * @method static bool hasRole(string|array $role)
+ * @method static Collection allPermissions()
+ * @method static Collection getPermission(string|array $permission)
+ * @method static bool hasPermission(string|array $permission)
  * @method static Exception|null generateGates()
- * @method static bool gateHasPermission($user, $permission, string|array $inRole)
+ * @method static bool hasRoleAndPermission(string|array $role, string|array $permission)
+ * @method static bool gateHasPermission($user, string|array $permission, string|array $inRole)
  * @method static bool gateAllows($user, $permission, string|array $inRole)
  * @method static bool gateAllowsUnless($condition, $user, $permission, string|array $inRole)
- * @method static array hasRoleKeyName(string|array $keyName)
+ * @method static string|array checkIfPassedValueIsArrayOrString(string|array $keyName)
  * @method static bool allows(string|array $abilities, $inRole)
  * @method static bool allowsUnless($condition, string|array $abilities, $inRole)
  * @method static bool allowsAtLeastOne(array $abilities, $inRole)
