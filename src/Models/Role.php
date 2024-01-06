@@ -11,6 +11,8 @@ class Role extends Model
 {
     use HasFactory;
 
+    protected $table = "guard_shield_roles";
+
     protected $with = ['permissions'];
 
     protected $guarded = ["id"];

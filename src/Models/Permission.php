@@ -10,6 +10,8 @@ class Permission extends Model
 {
     use HasFactory;
 
+    protected $table = "guard_shield_permissions";
+
     protected $guarded = ['id'];
 
     protected $hidden = ['id', 'pivot', "created_at", "updated_at"];
