@@ -188,26 +188,30 @@ class GuardShieldService implements GuardShieldServiceInterface
         return false;
     }
 
-    public function newRoleAndPermissions(string $nameRole, string $descriptionRole, array $arrayWithPermissions)
+    public function newRoleAndPermissions(string $nameRole, string $descriptionRole, array $arrayWithPermissions): Role
     {
         return Role::newRoleAndPermissions($nameRole, $descriptionRole, $arrayWithPermissions);
     }
 
-    public function newRoleAndPermissionsUnless($condition, string $nameRole, string $descriptionRole, array $arrayWithPermissions)
+    public function newRoleAndPermissionsUnless($condition, string $nameRole, string $descriptionRole, array $arrayWithPermissions): ?Role
     {
         if($condition)
             return $this->newRoleAndPermissions($nameRole, $descriptionRole, $arrayWithPermissions);
+
+        return null;
     }
 
-    public function newRoleAndAssignPermissions(string $nameRole, string $descriptionRole, array $arrayWithPermissions)
+    public function newRoleAndAssignPermissions(string $nameRole, string $descriptionRole, array $arrayWithPermissions): Role
     {
         return Role::newRoleAndAssignPermissions($nameRole, $descriptionRole, $arrayWithPermissions);
     }
 
-    public function newRoleAndAssignPermissionsUnless($condition, string $nameRole, string $descriptionRole, array $arrayWithPermissions)
+    public function newRoleAndAssignPermissionsUnless($condition, string $nameRole, string $descriptionRole, array $arrayWithPermissions): ?Role
     {
         if($condition)
             return $this->newRoleAndAssignPermissions($nameRole, $descriptionRole, $arrayWithPermissions);
+
+        return null;
     }
 
     public function setActivePermission(string $namePermission, bool $status)
@@ -221,48 +225,56 @@ class GuardShieldService implements GuardShieldServiceInterface
             return $this->setActivePermission($namePermission, $status);
     }
 
-    public function newRole(string $name, string $description)
+    public function newRole(string $name, string $description): Role
     {
         return Role::new($name, $description);
     }
 
-    public function newRoleUnless($condition, string $name, string $description)
+    public function newRoleUnless($condition, string $name, string $description): ?Role
     {
         if($condition)
             return $this->newRole($name, $description);
+
+        return null;
     }
 
-    public function newPermission(string $name, string $description)
+    public function newPermission(string $name, string $description): Permission
     {
         return Permission::new($name, $description);
     }
 
-    public function newPermissionUnless($condition, string $name, string $description)
+    public function newPermissionUnless($condition, string $name, string $description): ?Permission
     {
         if($condition)
             return $this->newPermission($name, $description);
+
+        return null;
     }
 
-    public function assignPermission(Role $role, Permission $permission)
+    public function assignPermission(Role $role, Permission $permission): bool
     {
         return $role->assignPermission($permission);
     }
 
-    public function assignPermissionUnless($condition, Role $role, Permission $permission)
+    public function assignPermissionUnless($condition, Role $role, Permission $permission): bool
     {
         if($condition)
             return $this->assignPermission($role, $permission);
+
+        return false;
     }
 
-    public function unassignPermission(Role $role, Permission $permission)
+    public function unassignPermission(Role $role, Permission $permission): bool
     {
         return $role->unassignPermission($permission);
     }
 
-    public function unassignPermissionUnless($condition, Role $role, Permission $permission)
+    public function unassignPermissionUnless($condition, Role $role, Permission $permission): bool
     {
         if($condition)
             return $role->unassignPermission($permission);
+
+        return false;
     }
 
     public function userHasRole($user)
