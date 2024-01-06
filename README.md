@@ -15,13 +15,22 @@ Primeira Etapa, execute o comando.
 composer require larakeeps/guard-shield
 ```
 
-Segunda etapa, adicione o service provider. Abra `config/app.php` e adicione um novo item ao array de providers.
+Segunda etapa, adicione o service provider. Abra `app/Providers/AuthServiceProvider.php` o método `GuardShield::generateGates()` no `public function boot()` do Service Provider.
 
 ```php
-'providers' => [
-    // ...
-    Larakeeps\GuardShield\Providers\GuardShieldServiceProvider::class,
-]
+use Larakeeps\GuardShield\Facades\GuardShield;
+
+class AuthServiceProvider extends ServiceProvider
+{
+    
+        
+    public function boot(): void
+    {
+        GuardShield::generateGates();
+        
+        //restante do seu código......
+    }
+}
 ```
 
 Terceira etapa, adicione o middleware. Abra `app/Http/Kernel.php` e adicione um novo item ao array de middlewareAliases.
