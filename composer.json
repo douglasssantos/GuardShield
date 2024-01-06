@@ -44,7 +44,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Larakeeps\\GuardShield\\Providers\\LocationsServiceProvider"
+                "Larakeeps\\GuardShield\\Providers\\GuardShieldServiceProvider"
             ],
             "aliases": {
                 "GuardShield" : "Larakeeps\\GuardShield\\Facades\\GuardShield"
