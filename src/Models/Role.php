@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class GuardShieldRole extends Model
+class Role extends Model
 {
     use HasFactory;
 
@@ -40,7 +40,7 @@ class GuardShieldRole extends Model
             if(empty($permission[0]))
                 throw new Exception('Permission name is empty.');
 
-            $permission = GuardShieldPermission::new($permission[0], $permission[1]);
+            $permission = Permission::new($permission[0], $permission[1]);
 
             $role->assignPermission($permission);
 
@@ -63,7 +63,7 @@ class GuardShieldRole extends Model
             if(empty($permission[0]))
                 throw new Exception('Permission name is empty.');
 
-            $permission = GuardShieldPermission::where('key', $permission[0]);
+            $permission = Permission::where('key', $permission[0]);
 
             if($permission->exists())
                 $role->assignPermission($permission->first());
@@ -74,7 +74,7 @@ class GuardShieldRole extends Model
 
     }
 
-    public function assignPermission(GuardShieldPermission $permission)
+    public function assignPermission(Permission $permission)
     {
         if($this->permissions()->syncWithoutDetaching($permission))
             return true;
@@ -82,7 +82,7 @@ class GuardShieldRole extends Model
         return false;
     }
 
-    public function unassignPermission(GuardShieldPermission $permission)
+    public function unassignPermission(Permission $permission)
     {
         if($this->permissions()->detach($permission))
             return true;
@@ -92,13 +92,13 @@ class GuardShieldRole extends Model
 
     public function permissions()
     {
-        return $this->belongsToMany(GuardShieldPermission::class, "guard_shield_assigns");
+        return $this->belongsToMany(Permission::class, "guard_shield_assigns");
     }
 
     protected static function boot()
     {
         parent::boot();
-        static::creating(fn (GuardShieldRole $model) => $model->key = Str::slug($model->name));
+        static::creating(fn (Role $model) => $model->key = Str::slug($model->name));
     }
 
 }

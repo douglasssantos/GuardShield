@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class GuardShieldPermission extends Model
+class Permission extends Model
 {
     use HasFactory;
 
@@ -17,7 +17,7 @@ class GuardShieldPermission extends Model
 
     public function roles()
     {
-        return $this->belongsToMany(GuardShieldRole::class, "guard_shield_assigns");
+        return $this->belongsToMany(Role::class, "guard_shield_assigns");
     }
 
     public function scopeGetPermission($query, $name)
@@ -40,7 +40,7 @@ class GuardShieldPermission extends Model
     protected static function boot ()
     {
         parent::boot();
-        static::creating(fn (GuardShieldPermission $model) => $model->key = Str::slug($model->name));
+        static::creating(fn (Permission $model) => $model->key = Str::slug($model->name));
     }
 
 

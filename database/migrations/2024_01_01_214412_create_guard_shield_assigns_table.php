@@ -3,8 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Larakeeps\GuardShield\Models\GuardShieldPermission;
-use Larakeeps\GuardShield\Models\GuardShieldRole;
+use Larakeeps\GuardShield\Models\Permission;
+use Larakeeps\GuardShield\Models\Role;
 
 return new class extends Migration
 {
@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('guard_shield_assigns', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(GuardShieldRole::class);
-            $table->foreignIdFor(GuardShieldPermission::class);
+            $table->foreignIdFor(Role::class);
+            $table->foreignIdFor(Permission::class);
         });
     }
 

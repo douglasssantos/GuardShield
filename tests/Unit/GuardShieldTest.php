@@ -3,8 +3,8 @@
 namespace Larakeeps\GuardShield\Tests\Unit;
 
 use Illuminate\Support\Facades\Config;
-use Larakeeps\GuardShield\Models\GuardShieldPermission;
-use Larakeeps\GuardShield\Models\GuardShieldRole;
+use Larakeeps\GuardShield\Models\Permission;
+use Larakeeps\GuardShield\Models\Role;
 use Larakeeps\GuardShield\Tests\TestCase;
 
 class GuardShieldTest extends TestCase
@@ -13,7 +13,7 @@ class GuardShieldTest extends TestCase
     {
         $configRole = Config::get("role");
 
-        $role = GuardShieldRole::getRole($configRole['name']);
+        $role = Role::getRole($configRole['name']);
 
         $this->assertContains($configRole['name'], $role->name);
     }
@@ -22,7 +22,7 @@ class GuardShieldTest extends TestCase
     {
         $configPermission = Config::get("permissions");
 
-        $permission = GuardShieldPermission::getPermission($configPermission[0]['name']);
+        $permission = Permission::getPermission($configPermission[0]['name']);
 
         $this->assertContains($configPermission[0]['name'], $permission->name);
     }
@@ -31,7 +31,7 @@ class GuardShieldTest extends TestCase
     {
         $configPermission = Config::get("permissions");
 
-        $permission = GuardShieldPermission::setActive($configPermission[0]['name'], true);
+        $permission = Permission::setActive($configPermission[0]['name'], true);
 
         $this->assertTrue($permission);
     }
@@ -40,7 +40,7 @@ class GuardShieldTest extends TestCase
     {
         $configPermission = Config::get("permissions");
 
-        $permission = GuardShieldPermission::setActive($configPermission[0]['name'], false);
+        $permission = Permission::setActive($configPermission[0]['name'], false);
 
         $this->assertTrue($permission);
     }

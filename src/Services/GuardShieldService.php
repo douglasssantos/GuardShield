@@ -2,9 +2,10 @@
 
 namespace Larakeeps\GuardShield\Services;
 
+use Exception;
 use Illuminate\Support\Facades\Auth;
-use Larakeeps\GuardShield\Models\GuardShieldPermission;
-use Larakeeps\GuardShield\Models\GuardShieldRole;
+use Larakeeps\GuardShield\Models\Permission;
+use Larakeeps\GuardShield\Models\Role;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
@@ -13,21 +14,43 @@ class GuardShieldService implements GuardShieldServiceInterface
 
     public function allRoles()
     {
-        return GuardShieldRole::get();
+        return Role::get();
     }
 
     public function allPermissions(): \Illuminate\Support\Collection
     {
-        return GuardShieldPermission::get();
+        return Permission::get();
     }
 
-    public function generateGates(): void
+    public function generateGates(): ?Exception
     {
-        foreach ($this->allPermissions() as $permission){
-            Gate::define($permission->name,
-            fn ($user, $inRole = null) => $this->gateAllows($user, $permission->key, $inRole));
+        try {
+            foreach (Permission::all() as $permission) {
+                Gate::define($permission->name,
+                    fn($user, $inRole = null) => $this->gateAllows($user, $permission->key, $inRole));
+            }
+
+            return null;
+
+        } catch(Exception $e) {
+            return $e;
+        }
+    }
+
+    public function gateHasPermission($user, $permission, string|array $inRole = null): bool
+    {
+        $roles = $user->roles();
+
+        if(!empty($inRole)){
+
+            if($roles->whereIn('key', $this->hasRoleKeyName($inRole))->doesntExist())
+                return false;
+
         }
 
+        return $roles->whereHas('permissions',
+            fn ($builder) => $builder->where('key', $permission)
+        )->exists();
     }
 
     public function gateAllows($user, $permission, string|array $inRole = null): bool
@@ -53,6 +76,7 @@ class GuardShieldService implements GuardShieldServiceInterface
 
         return $allow;
     }
+
     public function gateAllowsUnless($condition, $user, $permission, string|array $inRole = null): bool
     {
         if($condition)
@@ -133,7 +157,7 @@ class GuardShieldService implements GuardShieldServiceInterface
 
     public function newRoleAndPermissions(string $nameRole, string $descriptionRole, array $arrayWithPermissions)
     {
-        return GuardShieldRole::newRoleAndPermissions($nameRole, $descriptionRole, $arrayWithPermissions);
+        return Role::newRoleAndPermissions($nameRole, $descriptionRole, $arrayWithPermissions);
     }
 
     public function newRoleAndPermissionsUnless($condition, string $nameRole, string $descriptionRole, array $arrayWithPermissions)
@@ -144,7 +168,7 @@ class GuardShieldService implements GuardShieldServiceInterface
 
     public function newRoleAndAssignPermissions(string $nameRole, string $descriptionRole, array $arrayWithPermissions)
     {
-        return GuardShieldRole::newRoleAndAssignPermissions($nameRole, $descriptionRole, $arrayWithPermissions);
+        return Role::newRoleAndAssignPermissions($nameRole, $descriptionRole, $arrayWithPermissions);
     }
 
     public function newRoleAndAssignPermissionsUnless($condition, string $nameRole, string $descriptionRole, array $arrayWithPermissions)
@@ -155,7 +179,7 @@ class GuardShieldService implements GuardShieldServiceInterface
 
     public function setActivePermission(string $namePermission, bool $status)
     {
-        return GuardShieldPermission::setActive($namePermission, $status);
+        return Permission::setActive($namePermission, $status);
     }
 
     public function setActivePermissionUnless($condition, string $namePermission, bool $status)
@@ -166,7 +190,7 @@ class GuardShieldService implements GuardShieldServiceInterface
 
     public function newRole(string $name, string $description)
     {
-        return GuardShieldRole::new($name, $description);
+        return Role::new($name, $description);
     }
 
     public function newRoleUnless($condition, string $name, string $description)
@@ -177,7 +201,7 @@ class GuardShieldService implements GuardShieldServiceInterface
 
     public function newPermission(string $name, string $description)
     {
-        return GuardShieldPermission::new($name, $description);
+        return Permission::new($name, $description);
     }
 
     public function newPermissionUnless($condition, string $name, string $description)
@@ -186,23 +210,23 @@ class GuardShieldService implements GuardShieldServiceInterface
             return $this->newPermission($name, $description);
     }
 
-    public function assignPermission(GuardShieldRole $role, GuardShieldPermission $permission)
+    public function assignPermission(Role $role, Permission $permission)
     {
         return $role->assignPermission($permission);
     }
 
-    public function assignPermissionUnless($condition, GuardShieldRole $role, GuardShieldPermission $permission)
+    public function assignPermissionUnless($condition, Role $role, Permission $permission)
     {
         if($condition)
             return $this->assignPermission($role, $permission);
     }
 
-    public function unassignPermission(GuardShieldRole $role, GuardShieldPermission $permission)
+    public function unassignPermission(Role $role, Permission $permission)
     {
         return $role->unassignPermission($permission);
     }
 
-    public function unassignPermissionUnless($condition, GuardShieldRole $role, GuardShieldPermission $permission)
+    public function unassignPermissionUnless($condition, Role $role, Permission $permission)
     {
         if($condition)
             return $role->unassignPermission($permission);

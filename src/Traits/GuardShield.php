@@ -3,7 +3,7 @@
 namespace Larakeeps\GuardShield\Traits;
 
 use Illuminate\Support\Str;
-use Larakeeps\GuardShield\Models\GuardShieldRole;
+use Larakeeps\GuardShield\Models\Role;
 
 trait GuardShield
 {
@@ -19,7 +19,7 @@ trait GuardShield
 
     public function scopeAssignRole($query, $roleName)
     {
-        $role = GuardShieldRole::where('key', Str::slug($roleName));
+        $role = Role::where('key', Str::slug($roleName));
 
         if($role->doesntExist()) return false;
 
@@ -38,7 +38,7 @@ trait GuardShield
 
     public function roles()
     {
-        return $this->belongsToMany(GuardShieldRole::class)
+        return $this->belongsToMany(Role::class)
             ->with("permissions");
     }
 

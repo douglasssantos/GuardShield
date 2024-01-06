@@ -2,14 +2,16 @@
 
 namespace Larakeeps\GuardShield\Facades;
 
+use Exception;
 use Illuminate\Support\Facades\Facade;
-use Larakeeps\GuardShield\Models\GuardShieldPermission;
-use Larakeeps\GuardShield\Models\GuardShieldRole;
+use Larakeeps\GuardShield\Models\Permission;
+use Larakeeps\GuardShield\Models\Role;
 
 /**
  * @method static void allRoles()
  * @method static void allPermissions()
- * @method static void generateGates()
+ * @method static Exception|null generateGates()
+ * @method static bool gateHasPermission($user, $permission, string|array $inRole)
  * @method static bool gateAllows($user, $permission, string|array $inRole)
  * @method static bool gateAllowsUnless($condition, $user, $permission, string|array $inRole)
  * @method static array hasRoleKeyName(string|array $keyName)
@@ -31,10 +33,10 @@ use Larakeeps\GuardShield\Models\GuardShieldRole;
  * @method static void newRoleUnless($condition, string $name, string $description)
  * @method static void newPermission(string $name, string $description)
  * @method static void newPermissionUnless($condition, string $name, string $description)
- * @method static void assignPermission(GuardShieldRole $role, GuardShieldPermission $permission)
- * @method static void assignPermissionUnless($condition, GuardShieldRole $role, GuardShieldPermission $permission)
- * @method static void unassignPermission(GuardShieldRole $role, GuardShieldPermission $permission)
- * @method static void unassignPermissionUnless($condition, GuardShieldRole $role, GuardShieldPermission $permission)
+ * @method static void assignPermission(Role $role, Permission $permission)
+ * @method static void assignPermissionUnless($condition, Role $role, Permission $permission)
+ * @method static void unassignPermission(Role $role, Permission $permission)
+ * @method static void unassignPermissionUnless($condition, Role $role, Permission $permission)
  * @method static void userHasRole($user)
  *
  * @see \Larakeeps\GuardShield\Services\LocationsServiceInterface

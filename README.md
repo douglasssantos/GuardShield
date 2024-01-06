@@ -56,12 +56,13 @@ php artisan migrate
 
 
 **Criando Grupo de Regras e Permissões Utilizando Model**
-```php
-use \Larakeeps\GuardShield\Models\GuardShieldRole;
-use \Larakeeps\GuardShield\Models\GuardShieldPermission;
 
-$role = GuardShieldRole::new("Administrador", "Grupo de regra para administradores."); // Criando um novo grupo de permissões
-$permission = GuardShieldPermission::new("Editar Usuário", "Permissão para editar usuário"); // Criando uma nova permissão
+```php
+use \Larakeeps\GuardShield\Models\Role;
+use \Larakeeps\GuardShield\Models\Permission;
+
+$role = Role::new("Administrador", "Grupo de regra para administradores."); // Criando um novo grupo de permissões
+$permission = Permission::new("Editar Usuário", "Permissão para editar usuário"); // Criando uma nova permissão
 $role->assignPermission($permission); // Vinculando a permissão a um grupo de permissões.
 
 
@@ -75,7 +76,7 @@ $permissions = [
     ["Deletar Usuário", "Permissão para deletar usuário"],
 ];
 
-GuardShieldRole::newRoleAndPermissions("Administrador", "Grupo de regra para administradores.", $permissions);
+Role::newRoleAndPermissions("Administrador", "Grupo de regra para administradores.", $permissions);
 
 
 
@@ -83,11 +84,11 @@ GuardShieldRole::newRoleAndPermissions("Administrador", "Grupo de regra para adm
 
 $permissions = ["Visualizar Usuário", "Criar Usuário", "Editar Usuário", "Deletar Usuário"];
 
-GuardShieldRole::newRoleAndAssignPermissions("Administrador", "Grupo de regra para administradores.", $permissions);
+Role::newRoleAndAssignPermissions("Administrador", "Grupo de regra para administradores.", $permissions);
 
 // Ativando e Desativando uma permissão
 
-GuardShieldPermission::setActive("Visualizar Usuário", false);
+Permission::setActive("Visualizar Usuário", false);
 
 
 ```

@@ -2,14 +2,16 @@
 
 namespace Larakeeps\GuardShield\Services;
 
-use Larakeeps\GuardShield\Models\GuardShieldPermission;
-use Larakeeps\GuardShield\Models\GuardShieldRole;
+use Exception;
+use Larakeeps\GuardShield\Models\Permission;
+use Larakeeps\GuardShield\Models\Role;
 
 interface GuardShieldServiceInterface
 {
     public function allRoles();
     public function allPermissions();
-    public function generateGates(): void;
+    public function generateGates(): ?Exception;
+    public function gateHasPermission($user, $permission, string|array $inRole = null): bool;
     public function gateAllows($user, $permission, string|array $inRole = null): bool;
     public function gateAllowsUnless($condition, $user, $permission, string|array $inRole = null): bool;
     public function hasRoleKeyName(string|array $keyName): array;
@@ -31,9 +33,9 @@ interface GuardShieldServiceInterface
     public function newRoleUnless($condition, string $name, string $description);
     public function newPermission(string $name, string $description);
     public function newPermissionUnless($condition, string $name, string $description);
-    public function assignPermission(GuardShieldRole $role, GuardShieldPermission $permission);
-    public function assignPermissionUnless($condition, GuardShieldRole $role, GuardShieldPermission $permission);
-    public function unassignPermission(GuardShieldRole $role, GuardShieldPermission $permission);
-    public function unassignPermissionUnless($condition, GuardShieldRole $role, GuardShieldPermission $permission);
+    public function assignPermission(Role $role, Permission $permission);
+    public function assignPermissionUnless($condition, Role $role, Permission $permission);
+    public function unassignPermission(Role $role, Permission $permission);
+    public function unassignPermissionUnless($condition, Role $role, Permission $permission);
     public function userHasRole($user);
 }
