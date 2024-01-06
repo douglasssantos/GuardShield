@@ -11,7 +11,8 @@
         "rbac",
         "security"
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Douglas S. Santos",
