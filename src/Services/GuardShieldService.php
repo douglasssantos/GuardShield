@@ -27,7 +27,7 @@ class GuardShieldService implements GuardShieldServiceInterface
         try {
             foreach (Permission::all() as $permission) {
                 Gate::define($permission->name,
-                    fn($user, $inRole = null) => $this->gateAllows($user, $permission->key, $inRole));
+                    fn($user, $inRole = null) => $this->gateHasPermission($user, $permission->key, $inRole));
             }
 
             return null;
