@@ -2,7 +2,7 @@
 > GuardShield é um repositório laravel com a função de aplicar regras de permissionamento, utilizando agrupamento de regras e permissões.
 > segue abaixo o passo a passo para instalar o repositório.
 
-### Este repositório é compativel apenas com laravel: `9.*` and `10.*`
+### Este repositório é compativel apenas com laravel: `8.*` à `10.*`
 
 
 
