@@ -1,43 +1,37 @@
 **GuardShield**
-> GuardShield é um repositório laravel com a função de aplicar regras de permissionamento, utilizando agrupamento de regras e permissões.
-> segue abaixo o passo a passo para instalar o repositório.
-> 
 > GuardShield is a laravel repository with the function of applying permission rules, using grouping of rules and permissions.
 > follow the step-by-step instructions below to install the repository.
 
-### Este repositório é compativel apenas com laravel: `8.*` à `10.*`
 ### This repository is only compatible with laravel: `8.*` to `10.*`
 
 
+## Installation
 
-## Instalação
 
-
-Primeira Etapa, execute o comando.
+First Step, execute the command.
 
 ```shell script
 composer require larakeeps/guard-shield
 ```
 
-Segunda etapa, adicione o service provider. Abra `app/Providers/AuthServiceProvider.php` o método `GuardShield::generateGates()` no `public function boot()` do Service Provider.
+Second step, add the service provider. Open `app/Providers/AuthServiceProvider.php` or the `GuardShield::generateGates()` method in the Service Provider's `public function boot()`.
 
 ```php
 use Larakeeps\GuardShield\Facades\GuardShield;
 
 class AuthServiceProvider extends ServiceProvider
-{
-    
+{    
         
     public function boot(): void
     {
         GuardShield::generateGates();
         
-        //restante do seu código......
+        //rest of your code......
     }
 }
 ```
 
-Terceira etapa, adicione o middleware. Abra `app/Http/Kernel.php` e adicione um novo item ao array de middlewareAliases.
+Third step, add the middleware. Open `app/Http/Kernel.php` and add a new item to the middlewareAliases array.
 
 ```php
 protected $middlewareAliases = [
@@ -46,7 +40,7 @@ protected $middlewareAliases = [
 ]
 ```
 
-Quarta etapa adicione a trait e o parâmetro necessario a sua model. Abra `Models/User.php`
+Fourth step add the trait and the necessary parameter to your model. Open `Models/User.php`
 
 ```php
 
@@ -58,149 +52,147 @@ class User extends Authenticatable
 
   protected $with = ['roles'];
 
-  //.... restanto do código da model
+  //.... rest of the model code
 }
 ```
 
-Quinta etapa, execute o migrate para criar as tabelas: ```guard_shield_roles, guard_shield_role_user, guard_shield_assigns, guard_shield_permissions```
+Fifth step, run the migration to create the tables: ```guard_shield_roles, guard_shield_role_user, guard_shield_assigns, guard_shield_permissions```
 ```shell script
 php artisan migrate
 ```
 
 
-**Criando Grupo de Regras e Permissões Utilizando Model**
+**Creating Group of Rules and Permissions Using Model**
 
 ```php
 use \Larakeeps\GuardShield\Models\Role;
 use \Larakeeps\GuardShield\Models\Permission;
 
-$role = Role::new("Administrador", "Grupo de regra para administradores."); // Criando um novo grupo de permissões
-$permission = Permission::new("Editar Usuário", "Permissão para editar usuário"); // Criando uma nova permissão
-$role->assignPermission($permission); // Vinculando a permissão a um grupo de permissões.
+$role = Role::new("Administrator", "Rule group for administrators."); // Creating a new permission group.
+$permission = Permission::new("Edit User", "Permission to edit user."); // Creating a new permission.
+$role->assignPermission($permission); // Linking the permission to a permission group.
 
 
 
-//Criando uma Regra, permissões e Vinculando as permissões criadas ao grupo de permissões.
+//Creating a Rule, permissions and Linking the created permissions to the permission group.
 
 $permissions = [
-    ["Visualizar Usuário", "Permissão para visualizar usuário"],
-    ["Criar Usuário", "Permissão para criar usuário"],
-    ["Editar Usuário", "Permissão para editar usuário"],
-    ["Deletar Usuário", "Permissão para deletar usuário"],
+    ["View User", "Permission to view user"],
+    ["Create User", "Permission to create user"],
+    ["Edit User", "Permission to edit user"],
+    ["Delete User", "Permission to delete user"]
 ];
 
-Role::newRoleAndPermissions("Administrador", "Grupo de regra para administradores.", $permissions);
+Role::newRoleAndPermissions("Administrator", "Rule group for administrators.", $permissions);
 
 
 
-//Criando uma Regra e Vinculando as permissões já existente ao grupo de permissões criado.
+//Creating a Rule and Linking existing permissions to the created permission group.
 
-$permissions = ["Visualizar Usuário", "Criar Usuário", "Editar Usuário", "Deletar Usuário"];
+$permissions = ["View User", "Create User", "Edit User", "Delete User"];
 
-Role::newRoleAndAssignPermissions("Administrador", "Grupo de regra para administradores.", $permissions);
+Role::newRoleAndAssignPermissions("Administrator", "Rule group for administrators.", $permissions);
 
-// Ativando e Desativando uma permissão
+// Activating and Deactivating a permission.
 
-Permission::setActive("Visualizar Usuário", false);
+Permission::setActive("View User", false);
 
 
 ```
 
-**Criando Grupo de Regras e Permissões Utilizando Facade**
+**Creating Rules and Permissions Groups Using Facade**
 ```php
 use Larakeeps\GuardShield\Facades\GuardShield;
 
-$role = GuardShield::newRole("Administrador", "Grupo de regra para administradores."); // Criando um novo grupo de permissões
-$permission = GuardShield::newPermission("Editar Usuário", "Permissão para editar usuário"); // Criando uma nova permissão
-$role->assignPermission($permission); // Vinculando a permissão a um grupo de permissões.
+$role = GuardShield::newRole("Administrator", "Rule group for administrators."); // Creating a new permission group
+$permission = GuardShield::newPermission("Edit User", "Permission to edit user"); // Creating a new permission
+$role->assignPermission($permission); // Linking the permission to a permission group.
 
-// OU
+// OR
 
 GuardShield::assignPermission($role, $permission);
 
 
-
-//Criando uma Regra, permissões e Vinculando as permissões criadas ao grupo de permissões.
+//Creating a Rule, permissions and Linking the created permissions to the permission group.
 
 $permissions = [
-    ["Visualizar Usuário", "Permissão para visualizar usuário"],
-    ["Criar Usuário", "Permissão para criar usuário"],
-    ["Editar Usuário", "Permissão para editar usuário"],
-    ["Deletar Usuário", "Permissão para deletar usuário"],
+     ["View User", "Permission to view user"],
+     ["Create User", "Permission to create user"],
+     ["Edit User", "Permission to edit user"],
+     ["Delete User", "Permission to delete user"],
 ];
 
-GuardShield::newRoleAndPermissions("Administrador", "Grupo de regra para administradores.", $permissions);
+GuardShield::newRoleAndPermissions("Administrator", "Rule group for administrators.", $permissions);
 
 
 
-//Criando uma Regra e Vinculando as permissões já existente ao grupo de permissões criado.
+//Creating a Rule and Linking existing permissions to the created permission group.
 
-$permissions = ["Visualizar Usuário", "Criar Usuário", "Editar Usuário", "Deletar Usuário"];
+$permissions = ["View User", "Create User", "Edit User", "Delete User"];
 
-GuardShield::newRoleAndAssignPermissions("Administrador", "Grupo de regra para administradores.", $permissions);
+GuardShield::newRoleAndAssignPermissions("Administrator", "Rule group for administrators.", $permissions);
 
-// Ativando e Desativando uma permissão
+// Activating and Deactivating a permission
 
-GuardShield::setActivePermission("Visualizar Usuário", false);
+GuardShield::setActivePermission("View User", false);
 
 
 ```
 
-**Verificando a existencia dos grupos de regras e permissões criadas.**
+**Checking the existence of rule groups and permissions created.**
 ```php
 use Larakeeps\GuardShield\Facades\GuardShield;
 
-$hasPermission = ["view.user", "create.user", "update.user", "delete.user"];
+$hasPermission = ["View User", "Create User", "Update User", "Delete User"];
 
 /** 
  * 
- * Poder um ou mais regras passando um array como paramêtro 
- * O mesmo vale para as permissões
+ * Power one or more rules by passing an array as a parameter
+ * The same goes for permissions
  * @method static bool hasRoleAndPermission(string|array $role, string|array $permission)
  * 
  * */
-$hasRolesAndPermissions = !GuardShield::hasRoleAndPermission('user' , $hasPermission);
+
+$hasRolesAndPermissions = GuardShield::hasRoleAndPermission('user' , $hasPermission);
 
 if($hasRolesAndPermissions){
-    return "O Grupo de regras e as permissão existem."
+    return "The Rule Group and permissions exist."
 }
 
 
 /** 
  * 
- * Verifique se uma ou mais grupos de regras existem. 
+ * Check whether one or more rule groups exist.
  * @method static bool hasRole(string|array $role)
  * 
  * */
-$hasRoles = !GuardShield::hasRole(['administrator', 'user']);
+$hasRoles = GuardShield::hasRole(['administrator', 'user']);
 
 if($hasRoles){
-    return "Os Grupos de regras existem."
+    return "Rule Groups exist."
 }
 
 
 /** 
  * 
- * Verifique se uma ou mais grupos de regras existem. 
+ * Check whether one or more rule groups exist.
  * @method static bool hasPermission(string|array $role)
  * 
  * */
  
-$permissions = ["view.user", "create.user", "update.user", "delete.user"];
-$hasPermission = !GuardShield::hasPermission($permissions);
+$permissions = ["View User", "Create User", "Update User", "Delete User"];
+$hasPermission = GuardShield::hasPermission($permissions);
 
 if($hasPermission){
-    return "As permissões existem."
+    return "Permissions exist."
 }
 
-//Metodos Unless para validação.
 
-
-
+//Unless methods for validation.
 
 ```
 
-**Visualizando as regras e permissões criadas**
+**Viewing the created rules and permissions.**
 ```php
 use Larakeeps\GuardShield\Facades\GuardShield;
 
@@ -220,7 +212,7 @@ return GuardShield::allRoles();
             "permissions": [
                 {
                     "key": "viewuser",
-                    "name": "view.user",
+                    "name": "View User",
                     "description": "Permission to view user.",
                     "params": null,
                     "active": true
@@ -234,7 +226,7 @@ return GuardShield::allRoles();
             "permissions": [
                 {
                     "key": "viewuser",
-                    "name": "view.user",
+                    "name": "View User",
                     "description": "Permission to view user.",
                     "params": null,
                     "active": true
@@ -245,7 +237,7 @@ return GuardShield::allRoles();
  */
  
 // @method getRole(array|string $role): Collection
-return GuardShield::getRole();
+return GuardShield::getRole(['administrator', 'user']);
 
 /**
  * Returned array: 
@@ -257,7 +249,7 @@ return GuardShield::getRole();
             "permissions": [
                 {
                     "key": "viewuser",
-                    "name": "view.user",
+                    "name": "View User",
                     "description": "Permission to view user.",
                     "params": null,
                     "active": true
@@ -271,7 +263,7 @@ return GuardShield::getRole();
             "permissions": [
                 {
                     "key": "viewuser",
-                    "name": "view.user",
+                    "name": "View User",
                     "description": "Permission to view user.",
                     "params": null,
                     "active": true
@@ -289,14 +281,14 @@ return GuardShield::allPermissions();
  * [
         {
         "key": "viewuser",
-        "name": "view.user",
+        "name": "View User",
         "description": "Permission to view user.",
         "params": null,
         "active": true
         },
         {
         "key": "createuser",
-        "name": "create.user",
+        "name": "Create User",
         "description": "Permission to create user.",
         "params": null,
         "active": true
@@ -305,21 +297,21 @@ return GuardShield::allPermissions();
  */
  
 //@method getPermission(array|string $permission): Collection 
-return GuardShield::getPermission(['view.user', 'create.user']);
+return GuardShield::getPermission(['View User', 'Create User']);
 
 /**
  * Returned array: 
  * [
         {
         "key": "viewuser",
-        "name": "view.user",
+        "name": "View User",
         "description": "Permission to view user.",
         "params": null,
         "active": true
         },
         {
         "key": "createuser",
-        "name": "create.user",
+        "name": "Create User",
         "description": "Permission to create user.",
         "params": null,
         "active": true
@@ -329,87 +321,84 @@ return GuardShield::getPermission(['view.user', 'create.user']);
 
 ```
 
-**Atribuir um grupo de regras a usuário**
+**Assign a rule group to a user**
 ```php
 
-User::whereId($request->user_id)->assignRole("Administrador");
+User::whereId($request->user_id)->assignRole("Administrator");
 
-// OU
+// OR
 
-Auth::user()->assignRole("Administrador");
+Auth::user()->assignRole("Administrator");
 
-// OU
+// OR
 
-$request->user()->assignRole("Administrador");
+$request->user()->assignRole("Administrator");
 
 ```
 
-**Como Usar o GuardShield**
+**How to Use GuardShield**
 
 ```php
 use Illuminate\Support\Facades\Gate;
 use Larakeeps\GuardShield\Facades\GuardShield;
 
-// Usando Gates
-if(Gate::allows('Editar Usuário')){
-    return "Usuário contem a permissão necessária para executar a ação."
+// Using Gates
+if(Gate::allows('Edit User')){
+    return "User contains the necessary permission to perform the action.";
 }
 
-// Verificar se o usuário tem a permissão e se a permissão faz parte de um grupo de permissões
-if(Gate::allows('Editar Usuário', "Administrador")){
-    return "Usuário contem a permissão necessária para executar a ação."
-}
-
-//====================================================
-
-// Usando GuardShield
-if(GuardShield::allows('Editar Usuário')){
-    return "Usuário contem a permissão necessária para executar a ação."
-}
-
-// Verificar se o usuário tem a permissão e se a permissão faz parte de um grupo de permissões
-if(GuardShield::allows('Editar Usuário', "Administrador")){
-    return "Usuário contem a permissão necessária para executar a ação."
+// Check whether the user has the permission and whether the permission is part of a permission group.
+if(Gate::allows('Edit User', "Administrator")){
+    return "User contains the necessary permission to perform the action.";
 }
 
 //====================================================
 
-// Usando o Model
-if(Auth::user()->hasRole("Administrador"))){
-    return "Usuário faz parte do grupo de permissões."
+// Using GuardShield
+if(GuardShield::allows('Edit User')){
+    return "User contains the necessary permission to perform the action.";
+}
+
+// Check if the user has the permission and if the permission is part of a permission group.
+if(GuardShield::allows('Edit User', "Administrator")){
+     return "User has the necessary permission to perform the action.";
 }
 
 //====================================================
 
-// Usando Middleware para verificar as permissões
+// Using the Model
+if(Auth::user()->hasRole("Administrator"))){
+     return "User is part of the permission group.";
+}
+
+//====================================================
+
+// Using Middleware to check permissions
 
 Route::post("edit-user", function (\Illuminate\Http\Request $request){
     
-     return "Usuário contem a permissão necessária para executar a ação."
+      return "User has the necessary permission to perform the action."
 
-})->middleware(['auth:sanctum', "can:Editar Usuário,Deletar Usuário"]);
+})->middleware(['auth:sanctum', "can:Edit User,Delete User"]);
 
 
-// Usando Middleware para verificar o grupo de permissões
+// Using Middleware to check permission group
 
 Route::post("edit-user", function (\Illuminate\Http\Request $request){
     
-     return "Usuário faz parte do grupo de permissões";
+      return "User is part of the permission group";
 
 })->middleware(['auth:sanctum', "rolecan:admin,user"]);
 
 
-
 ```
 
-#### Não esqueça de me seguir github e marcar uma estrela no projeto.
+#### Don't forget to follow me on github and star the project.
 
 <br>
 
->### Meus Contatos</kbd>
+>### My contacts</kbd>
 > >E-mail: douglassantos2127@gmail.com
 > >
 > >Linkedin: <a href='https://www.linkedin.com/in/douglas-da-silva-santos/' target='_blank'>Acessa Perfil</a>&nbsp;&nbsp;<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="24">
-> >
-> >GeekHunter: <a href='https://www.linkedin.com/in/douglas-da-silva-santos/' target='_blank'>Acessa Perfil</a>&nbsp;&nbsp;<img src="https://www.geekhunter.com.br/_next/static/media/geek-logo.5e162598.svg" width="120">
 
