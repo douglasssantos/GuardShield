@@ -6,6 +6,7 @@
 > follow the step-by-step instructions below to install the repository.
 
 ### Este repositório é compativel apenas com laravel: `8.*` à `10.*`
+### This repository is only compatible with laravel: `8.*` to `10.*`
 
 
 
