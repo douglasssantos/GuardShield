@@ -21,6 +21,11 @@ class GuardShieldService implements GuardShieldServiceInterface
         return Gate::abilities();
     }
 
+    public function role(): Role
+    {
+        return Role::query();
+    }
+
     public function allRoles(bool $withPermissions = false): Collection
     {
         return Role::when($withPermissions, fn($query) => $query->with("permissions"))->get();
@@ -254,6 +259,11 @@ class GuardShieldService implements GuardShieldServiceInterface
         return null;
     }
 
+    public function module(): Module
+    {
+        return Module::query();
+    }
+
     public function newModule(string $name, string $description): Module
     {
         return Module::new($name, $description);
@@ -273,6 +283,11 @@ class GuardShieldService implements GuardShieldServiceInterface
     public function getAllPermissionByModule(string $name): Permission
     {
         return Module::whereName(Str::slug($name))->first()->permissions()->get();
+    }
+
+    public function permission(): Permission
+    {
+        return Permission::query();
     }
 
     public function newPermission(string $name, string $description, Module|int|null $module = null): Permission
