@@ -15,7 +15,7 @@ class Module extends Model
 
     protected $guarded = ['id'];
 
-    protected $hidden = ['id', "created_at", "updated_at"];
+    protected $hidden = ["created_at", "updated_at"];
 
 
     public function permissions()
