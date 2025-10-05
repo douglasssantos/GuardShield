@@ -42,6 +42,7 @@ use Larakeeps\GuardShield\Models\Role;
  * @method static Role|null newRoleUnless($condition, string $name, string $description)
  * @method static Module newModule(string $name, string $description)
  * @method static Module getModule(string $name)
+ * @method static Collection allModules()
  * @method static Permission getAllPermissionByModule(string $name)
  * @method static Permission newPermission(string $name, string $description, ?Module $module = null)
  * @method static void newPermissions(array $permissions, ?Module $module = null)

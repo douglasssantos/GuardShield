@@ -43,6 +43,7 @@ interface GuardShieldServiceInterface
     public function newRoleUnless($condition, string $name, string $description): ?Role;
     public function newModule(string $name, string $description): Module;
     public function getModule(string $name): Module;
+    public function allModules(): Collection;
     public function getAllPermissionByModule(string $name): Permission;
     public function newPermission(string $name, string $description, ?Module $module = null): Permission;
     public function newPermissions(array $permissions, ?Module $module = null): void;

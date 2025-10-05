@@ -260,6 +260,11 @@ class GuardShieldService implements GuardShieldServiceInterface
         return Module::getModule($name);
     }
 
+    public function allModules(): Collection
+    {
+        return Module::get();
+    }
+
     public function getAllPermissionByModule(string $name): Permission
     {
         return Module::whereName(Str::slug($name))->first()->permissions()->get();
