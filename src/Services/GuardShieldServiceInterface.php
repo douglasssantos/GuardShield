@@ -12,11 +12,11 @@ use Larakeeps\GuardShield\Models\Role;
 interface GuardShieldServiceInterface
 {
     public function abilities(): array;
-    public function allRoles(): Collection;
-    public function getRole(string|array $role): Collection;
+    public function allRoles(bool $withPermissions = false): Collection;
+    public function getRole(string|array $role, bool $withPermissions = false): Collection;
     public function hasRole(string|array $role): bool;
-    public function allPermissions(): Collection;
-    public function getPermission(string|array $permission): Collection;
+    public function allPermissions(bool $withRole = false): Collection;
+    public function getPermission(string|array $permission, bool $withRole = false): Collection;
     public function hasPermission(string|array $permission): bool;
     public function generateGates(): ?Exception;
     public function hasRoleAndPermission(string|array $role, string|array $permission): bool;
@@ -42,8 +42,8 @@ interface GuardShieldServiceInterface
     public function newRoles(array $roles, array $permissions): void;
     public function newRoleUnless($condition, string $name, string $description): ?Role;
     public function newModule(string $name, string $description): Module;
-    public function getModule(string $name): Module;
-    public function allModules(): Collection;
+    public function getModule(string $name,bool $withPermissions = false): Module;
+    public function allModules(bool $withPermissions = false): Collection;
     public function getAllPermissionByModule(string $name): Permission;
     public function newPermission(string $name, string $description, ?Module $module = null): Permission;
     public function newPermissions(array $permissions, ?Module $module = null): void;

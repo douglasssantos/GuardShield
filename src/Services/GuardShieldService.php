@@ -21,9 +21,9 @@ class GuardShieldService implements GuardShieldServiceInterface
         return Gate::abilities();
     }
 
-    public function allRoles(): Collection
+    public function allRoles(bool $withPermissions = false): Collection
     {
-        return Role::get();
+        return Role::when($withPermissions, fn($query) => $query->with("permissions"))->get();
     }
 
     public function checkIfPassedValueIsArrayOrString(string|array $keyName): string | array
@@ -31,9 +31,11 @@ class GuardShieldService implements GuardShieldServiceInterface
         return is_array($keyName) ? array_map([new Str, "slug"], $keyName) : [Str::slug($keyName)];
     }
 
-    public function getRole(string|array $role): Collection
+    public function getRole(string|array $role, bool $withPermissions = false): Collection
     {
-        return Role::whereIn("key", $this->checkIfPassedValueIsArrayOrString($role))->get();
+        return Role::when($withPermissions, fn($query) => $query->with("permissions"))
+            ->whereIn("key", $this->checkIfPassedValueIsArrayOrString($role))
+            ->get();
     }
 
     public function hasRole($role): bool
@@ -41,14 +43,16 @@ class GuardShieldService implements GuardShieldServiceInterface
         return Role::whereIn("key", $this->checkIfPassedValueIsArrayOrString($role))->exists();
     }
 
-    public function allPermissions(): Collection
+    public function allPermissions(bool $withRoles = false): Collection
     {
-        return Permission::get();
+        return Permission::when($withRoles, fn($query) => $query->with("roles"))->get();
     }
 
-    public function getPermission(string|array $permission): Collection
+    public function getPermission(string|array $permission, bool $withRole = false): Collection
     {
-        return Permission::whereIn("key", $this->checkIfPassedValueIsArrayOrString($permission))->get();
+        return Permission::when($withRole, fn($query) => $query->with("roles"))
+            ->whereIn("key", $this->checkIfPassedValueIsArrayOrString($permission))
+            ->get();
     }
 
     public function hasPermission(string|array $permission): bool
@@ -255,14 +259,15 @@ class GuardShieldService implements GuardShieldServiceInterface
         return Module::new($name, $description);
     }
 
-    public function getModule(string $name): Module
+    public function getModule(string $name, bool $withPermissions = false): Module
     {
-        return Module::getModule($name);
+        return Module::when($withPermissions, fn($query) => $query->with("permissions"))
+            ->getModule($name);
     }
 
-    public function allModules(): Collection
+    public function allModules(bool $withPermissions = false): Collection
     {
-        return Module::get();
+        return Module::when($withPermissions, fn($query) => $query->with("permissions"))->get();
     }
 
     public function getAllPermissionByModule(string $name): Permission
