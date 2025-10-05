@@ -11,8 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('guard_shield_permissions_modules', function (Blueprint $table) {
+            $table->id();
+            $table->string("key")->nullable();
+            $table->string("name");
+            $table->string('description')->nullable();
+            $table->timestamps();
+        });
+
         Schema::create('guard_shield_permissions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('module_id')->constrained("guard_shield_permissions_modules")->onDelete('cascade');
             $table->string("key")->nullable();
             $table->string("name");
             $table->string('description')->nullable();

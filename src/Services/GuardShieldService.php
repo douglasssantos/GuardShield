@@ -5,11 +5,14 @@ namespace Larakeeps\GuardShield\Services;
 use Exception;
 use http\Params;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Larakeeps\GuardShield\Models\Module;
 use Larakeeps\GuardShield\Models\Permission;
 use Larakeeps\GuardShield\Models\Role;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
+use PhpParser\Node\Expr\AssignOp\Mod;
 
 class GuardShieldService implements GuardShieldServiceInterface
 {
@@ -230,6 +233,15 @@ class GuardShieldService implements GuardShieldServiceInterface
         return Role::new($name, $description);
     }
 
+    public function newRoles(array $roles, array $permissions): void
+    {
+        $permissionsIds = Arr::map($permissions, fn($permission) => Permission::where('key', Str::slug($permission[0]))->first()->id);
+        foreach ($roles as [$name, $description]) {
+            $role = Role::create(['name' => $name, 'description' => $description]);
+            $role->assignPermission($permissionsIds);
+        }
+    }
+
     public function newRoleUnless($condition, string $name, string $description): ?Role
     {
         if($condition)
@@ -238,9 +250,30 @@ class GuardShieldService implements GuardShieldServiceInterface
         return null;
     }
 
+    public function newModule(string $name, string $description): Module
+    {
+        return Module::new($name, $description);
+    }
+
+    public function getModule(string $name): Module
+    {
+        return Module::getModule($name);
+    }
+
+    public function getAllPermissionByModule(string $name): Permission
+    {
+        return Module::whereName(Str::slug($name))->first()->permissions()->get();
+    }
+
     public function newPermission(string $name, string $description): Permission
     {
         return Permission::new($name, $description);
+    }
+    public function newPermissions(array $permissions): void
+    {
+        foreach ($permissions as [$name, $description]) {
+            Permission::create(['name' => $name, 'description' => $description]);
+        }
     }
 
     public function newPermissionUnless($condition, string $name, string $description): ?Permission

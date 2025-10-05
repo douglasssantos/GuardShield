@@ -5,6 +5,7 @@ namespace Larakeeps\GuardShield\Facades;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Facade;
+use Larakeeps\GuardShield\Models\Module;
 use Larakeeps\GuardShield\Models\Permission;
 use Larakeeps\GuardShield\Models\Role;
 
@@ -37,8 +38,13 @@ use Larakeeps\GuardShield\Models\Role;
  * @method static void setActivePermission(string $namePermission, bool $status)
  * @method static void setActivePermissionUnless($condition, string $namePermission, bool $status)
  * @method static Role newRole(string $name, string $description)
+ * @method static void newRoles(array $roles, array $permissions)
  * @method static Role|null newRoleUnless($condition, string $name, string $description)
+ * @method static Module newModule(string $name, string $description)
+ * @method static Module getModule(string $name)
+ * @method static Permission getAllPermissionByModule(string $name)
  * @method static Permission newPermission(string $name, string $description)
+ * @method static void newPermissions(array $permissions)
  * @method static Permission|null newPermissionUnless($condition, string $name, string $description)
  * @method static bool assignPermission(Role $role, Permission $permission)
  * @method static bool assignPermissionUnless($condition, Role $role, Permission $permission)
