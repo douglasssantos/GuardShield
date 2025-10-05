@@ -42,7 +42,12 @@ class Permission extends Model
     protected static function boot ()
     {
         parent::boot();
-        static::creating(fn (Permission $model) => $model->key = Str::slug($model->name));
+        static::creating(function (Permission $model) {
+            $model->key = Str::slug($model->name);
+            $module = Module::find($model->module_id);
+            if(!$module) return;
+            $model->key = "{$module->key}:{$model->key}";
+        });
     }
 
 
