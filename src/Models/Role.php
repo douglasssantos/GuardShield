@@ -32,7 +32,7 @@ class Role extends Model
     /**
      * @throws Exception
      */
-    public function scopeNewRoleAndPermissions($query, $nameRole, $descriptionRole, $arrayWithPermissions)
+    public function scopeNewRoleAndPermissions($query, $nameRole, $descriptionRole, $arrayWithPermissions, ?Module $module = null)
     {
 
         $role =  $query->new($nameRole, $descriptionRole);
@@ -42,7 +42,7 @@ class Role extends Model
             if(empty($permission[0]))
                 throw new Exception('Permission name is empty.');
 
-            $permission = Permission::new($permission[0], $permission[1]);
+            $permission = Permission::new($permission[0], $permission[1], $module?->id);
 
             $role->assignPermission($permission);
 

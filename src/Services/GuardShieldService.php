@@ -191,15 +191,15 @@ class GuardShieldService implements GuardShieldServiceInterface
         return false;
     }
 
-    public function newRoleAndPermissions(string $nameRole, string $descriptionRole, array $arrayWithPermissions): Role
+    public function newRoleAndPermissions(string $nameRole, string $descriptionRole, array $arrayWithPermissions, ?Module $module = null): Role
     {
-        return Role::newRoleAndPermissions($nameRole, $descriptionRole, $arrayWithPermissions);
+        return Role::newRoleAndPermissions($nameRole, $descriptionRole, $arrayWithPermissions, $module);
     }
 
-    public function newRoleAndPermissionsUnless($condition, string $nameRole, string $descriptionRole, array $arrayWithPermissions): ?Role
+    public function newRoleAndPermissionsUnless($condition, string $nameRole, string $descriptionRole, array $arrayWithPermissions, ?Module $module = null): ?Role
     {
         if($condition)
-            return $this->newRoleAndPermissions($nameRole, $descriptionRole, $arrayWithPermissions);
+            return $this->newRoleAndPermissions($nameRole, $descriptionRole, $arrayWithPermissions, $module);
 
         return null;
     }
@@ -265,21 +265,21 @@ class GuardShieldService implements GuardShieldServiceInterface
         return Module::whereName(Str::slug($name))->first()->permissions()->get();
     }
 
-    public function newPermission(string $name, string $description): Permission
+    public function newPermission(string $name, string $description, Module|int|null $module = null): Permission
     {
-        return Permission::new($name, $description);
+        return Permission::new($name, $description, $module);;
     }
-    public function newPermissions(array $permissions): void
+    public function newPermissions(array $permissions, ?Module $module = null): void
     {
         foreach ($permissions as [$name, $description]) {
-            Permission::create(['name' => $name, 'description' => $description]);
+            Permission::create(['module_id' => $module?->id ?? $module, 'name' => $name, 'description' => $description]);
         }
     }
 
-    public function newPermissionUnless($condition, string $name, string $description): ?Permission
+    public function newPermissionUnless($condition, string $name, string $description, ?Module $module = null): ?Permission
     {
         if($condition)
-            return $this->newPermission($name, $description);
+            return $this->newPermission($name, $description, $module);;
 
         return null;
     }

@@ -28,9 +28,9 @@ class Permission extends Model
     }
 
 
-    public function scopeNew($query, $name, $description)
+    public function scopeNew($query, $name, $description, ?int $module_id = null)
     {
-        return $query->firstOrCreate(compact('name', 'description'));
+        return $query->firstOrCreate(compact('module_id', 'name', 'description'));
     }
 
     public function scopeSetActive($query, $permissionName, $active)
