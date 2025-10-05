@@ -4,6 +4,7 @@ namespace Larakeeps\GuardShield\Services;
 
 use Exception;
 use http\Message\Body;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Larakeeps\GuardShield\Models\Module;
 use Larakeeps\GuardShield\Models\Permission;
@@ -12,9 +13,9 @@ use Larakeeps\GuardShield\Models\Role;
 interface GuardShieldServiceInterface
 {
     public function abilities(): array;
-    public function role(): Role;
-    public function module(): Module;
-    public function permission(): Permission;
+    public function role(): Builder;
+    public function module(): Builder;
+    public function permission(): Builder;
     public function allRoles(bool $withPermissions = false): Collection;
     public function getRole(string|array $role, bool $withPermissions = false): Collection;
     public function hasRole(string|array $role): bool;

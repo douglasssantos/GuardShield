@@ -4,6 +4,7 @@ namespace Larakeeps\GuardShield\Services;
 
 use Exception;
 use http\Params;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -21,10 +22,21 @@ class GuardShieldService implements GuardShieldServiceInterface
         return Gate::abilities();
     }
 
-    public function role(): Role
+    public function role(): Builder
     {
         return Role::query();
     }
+
+    public function module(): Builder
+    {
+        return Module::query();
+    }
+
+    public function permission(): Builder
+    {
+        return Permission::query();
+    }
+
 
     public function allRoles(bool $withPermissions = false): Collection
     {
@@ -258,12 +270,6 @@ class GuardShieldService implements GuardShieldServiceInterface
 
         return null;
     }
-
-    public function module(): Module
-    {
-        return Module::query();
-    }
-
     public function newModule(string $name, string $description): Module
     {
         return Module::new($name, $description);
@@ -283,11 +289,6 @@ class GuardShieldService implements GuardShieldServiceInterface
     public function getAllPermissionByModule(string $name): Permission
     {
         return Module::whereName(Str::slug($name))->first()->permissions()->get();
-    }
-
-    public function permission(): Permission
-    {
-        return Permission::query();
     }
 
     public function newPermission(string $name, string $description, Module|int|null $module = null): Permission

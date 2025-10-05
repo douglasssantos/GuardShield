@@ -3,6 +3,7 @@
 namespace Larakeeps\GuardShield\Facades;
 
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Facade;
 use Larakeeps\GuardShield\Models\Module;
@@ -11,9 +12,9 @@ use Larakeeps\GuardShield\Models\Role;
 
 /**
  * @method static array abilities()
- * @method static Role role()
- * @method static Module module()
- * @method static Permission permission()
+ * @method static Builder role()
+ * @method static Builder module()
+ * @method static Builder permission()
  * @method static Collection allRoles(bool $withPermissions = false)
  * @method static Collection getRole(string|array $role, bool $withPermissions = false)
  * @method static bool hasRole(string|array $role)
