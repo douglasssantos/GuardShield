@@ -12,6 +12,9 @@ use Larakeeps\GuardShield\Models\Role;
 interface GuardShieldServiceInterface
 {
     public function abilities(): array;
+    public function role(): Role;
+    public function module(): Module;
+    public function permission(): Permission;
     public function allRoles(bool $withPermissions = false): Collection;
     public function getRole(string|array $role, bool $withPermissions = false): Collection;
     public function hasRole(string|array $role): bool;
