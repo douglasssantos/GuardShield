@@ -334,12 +334,12 @@ class GuardShieldService implements GuardShieldServiceInterface
         return null;
     }
 
-    public function assignPermission(Role $role, Permission $permission): bool
+    public function assignPermission(Role $role, array|Permission $permission): bool
     {
         return $role->assignPermission($permission);
     }
 
-    public function assignPermissionUnless($condition, Role $role, Permission $permission): bool
+    public function assignPermissionUnless($condition, Role $role, array|Permission $permission): bool
     {
         if($condition)
             return $this->assignPermission($role, $permission);
@@ -347,12 +347,12 @@ class GuardShieldService implements GuardShieldServiceInterface
         return false;
     }
 
-    public function unassignPermission(Role $role, Permission $permission): bool
+    public function unassignPermission(Role $role, array|Permission $permission): bool
     {
         return $role->unassignPermission($permission);
     }
 
-    public function unassignPermissionUnless($condition, Role $role, Permission $permission): bool
+    public function unassignPermissionUnless($condition, Role $role, array|Permission $permission): bool
     {
         if($condition)
             return $role->unassignPermission($permission);

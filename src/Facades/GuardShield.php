@@ -54,10 +54,10 @@ use Larakeeps\GuardShield\Models\Role;
  * @method static Permission newPermission(string $name, string $description, ?Module $module = null)
  * @method static void newPermissions(array $permissions, ?Module $module = null)
  * @method static Permission|null newPermissionUnless($condition, string $name, string $description, ?Module $module = null)
- * @method static bool assignPermission(Role $role, Permission $permission)
- * @method static bool assignPermissionUnless($condition, Role $role, Permission $permission)
- * @method static bool unassignPermission(Role $role, Permission $permission)
- * @method static bool unassignPermissionUnless($condition, Role $role, Permission $permission)
+ * @method static bool assignPermission(Role $role, array|Permission $permission)
+ * @method static bool assignPermissionUnless($condition, Role $role, array|Permission $permission)
+ * @method static bool unassignPermission(Role $role, array|Permission $permission)
+ * @method static bool unassignPermissionUnless($condition, Role $role, array|Permission $permission)
  * @method static void userHasRole($user)
  *
  * @see \Larakeeps\GuardShield\Services\LocationsServiceInterface

@@ -55,9 +55,9 @@ interface GuardShieldServiceInterface
     public function newPermission(string $name, string $description, ?Module $module = null): Permission;
     public function newPermissions(array $permissions, ?Module $module = null): void;
     public function newPermissionUnless($condition, string $name, string $description, ?Module $module = null): ?Permission;
-    public function assignPermission(Role $role, Permission $permission): bool;
-    public function assignPermissionUnless($condition, Role $role, Permission $permission): bool;
-    public function unassignPermission(Role $role, Permission $permission): bool;
-    public function unassignPermissionUnless($condition, Role $role, Permission $permission): bool;
+    public function assignPermission(Role $role, array|Permission $permission): bool;
+    public function assignPermissionUnless($condition, Role $role, array|Permission $permission): bool;
+    public function unassignPermission(Role $role, array|Permission $permission): bool;
+    public function unassignPermissionUnless($condition, Role $role, array|Permission $permission): bool;
     public function userHasRole($user);
 }

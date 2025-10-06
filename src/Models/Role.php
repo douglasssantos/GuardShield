@@ -76,7 +76,7 @@ class Role extends Model
 
     }
 
-    public function assignPermission(Permission $permission)
+    public function assignPermission(array|Permission $permission)
     {
         if($this->permissions()->syncWithoutDetaching($permission))
             return true;
@@ -84,7 +84,7 @@ class Role extends Model
         return false;
     }
 
-    public function unassignPermission(Permission $permission)
+    public function unassignPermission(array|Permission $permission)
     {
         if($this->permissions()->detach($permission))
             return true;
