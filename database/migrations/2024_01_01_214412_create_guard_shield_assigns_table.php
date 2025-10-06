@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('guard_shield_assigns', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Role::class);
-            $table->foreignIdFor(Permission::class);
+            $table->foreignId('role_id')->constrained("guard_shield_roles")->onDelete('cascade');
+            $table->foreignId('permission_id')->constrained("guard_shield_permissions")->onDelete('cascade');
+            $table->index(['role_id', 'permission_id']);
         });
     }
 

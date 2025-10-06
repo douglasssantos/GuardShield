@@ -3,8 +3,9 @@
 return [
     "provider" => [
         "users" => [
-            "id" => "use_id",
-            "model" => env('AUTH_MODEL', App\Models\User::class)
+            "id" => "user_id",
+            "model" => env('AUTH_MODEL', App\Models\User::class),
+            'database' => 'users'
         ]
     ],
 

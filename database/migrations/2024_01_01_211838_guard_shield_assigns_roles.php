@@ -13,8 +13,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('guard_shield_assigns_roles', function (Blueprint $table) {
-            $table->foreignIdFor(config("guard-shield.provider.users.model"));
-            $table->foreignIdFor(\Larakeeps\GuardShield\Models\Role::class);
+            $table
+                ->foreignId(config("guard-shield.provider.users.id"))
+                ->constrained(config("guard-shield.provider.users.database"))
+                ->onDelete('cascade');
+            $table->foreignId('role_id')->constrained("guard_shield_roles")->onDelete('cascade');
+
+            $table->index([config("guard-shield.provider.users.id"), "role_id"]);
 
         });
     }

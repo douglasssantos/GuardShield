@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string("name");
             $table->string('description')->nullable();
             $table->timestamps();
+            $table->index(["key", "name"]);
         });
 
         Schema::create('guard_shield_permissions', function (Blueprint $table) {
@@ -28,6 +29,8 @@ return new class extends Migration
             $table->json("params")->nullable();
             $table->boolean("active")->default(true);
             $table->timestamps();
+
+            $table->index(["module_id", "key", "name", "active", "params"]);
         });
     }
 
