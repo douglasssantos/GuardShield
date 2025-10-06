@@ -30,7 +30,7 @@ return new class extends Migration
             $table->boolean("active")->default(true);
             $table->timestamps();
 
-            $table->index(["module_id", "key", "name", "active", "params"]);
+            $table->index(["module_id", "key", "name", "active"]);
         });
     }
 
