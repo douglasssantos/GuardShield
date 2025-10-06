@@ -18,6 +18,9 @@ interface GuardShieldServiceInterface
     public function permission(): Builder;
     public function allRoles(bool $withPermissions = false): Collection;
     public function getRole(string|array $role, bool $withPermissions = false): Collection;
+    public function getRoleById(int $roleId, bool $withPermissions = false): Role;
+    public function getModuleById(int $moduleId, bool $withPermissions = false): Module;
+    public function getPermissionById(int $permissionId): Permission;
     public function hasRole(string|array $role): bool;
     public function allPermissions(bool $withRole = false): Collection;
     public function getPermission(string|array $permission, bool $withRole = false): Collection;

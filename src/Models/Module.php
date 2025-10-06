@@ -23,7 +23,7 @@ class Module extends Model
         return $this->hasMany(Permission::class, "module_id", "id");
     }
 
-    public function scopeGetModule(Builder $query, string $name)
+    public function scopeGetModule(Builder $query, string $name): static
     {
         return $query->where('key', Str::slug($name))->first();
     }

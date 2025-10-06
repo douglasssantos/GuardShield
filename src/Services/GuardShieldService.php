@@ -55,6 +55,29 @@ class GuardShieldService implements GuardShieldServiceInterface
             ->get();
     }
 
+    public function getRoleById( int $roleId, bool $withPermissions = false): Role
+    {
+        return Role::when($withPermissions,
+            fn($query) => $query->with("permissions"))
+            ->where("id", $roleId)
+            ->first();
+    }
+
+
+    public function getModuleById(int $moduleId, bool $withPermissions = false): Module
+    {
+        return Module::when($withPermissions,
+            fn($query) => $query->with("permissions"))
+            ->where("id", $moduleId)
+            ->first();
+    }
+
+
+    public function getPermissionById(int $permissionId): Permission
+    {
+        return Permission::where("id", $permissionId)->first();
+    }
+
     public function hasRole($role): bool
     {
         return Role::whereIn("key", $this->checkIfPassedValueIsArrayOrString($role))->exists();
@@ -277,7 +300,8 @@ class GuardShieldService implements GuardShieldServiceInterface
 
     public function getModule(string $name, bool $withPermissions = false): Module
     {
-        return Module::when($withPermissions, fn($query) => $query->with("permissions"))
+        return Module::when($withPermissions,
+            fn($query) => $query->with("permissions"))
             ->getModule($name);
     }
 
