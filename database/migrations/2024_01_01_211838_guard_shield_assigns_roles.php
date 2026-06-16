@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Larakeeps\GuardShield\Models\Table;
 
 return new class extends Migration
 {
@@ -12,12 +13,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('guard_shield_assigns_roles', function (Blueprint $table) {
-            $table
-                ->foreignId(config("guard-shield.provider.users.id"))
-                ->constrained(config("guard-shield.provider.users.database"))
+        Schema::create(Table::AssignsRoles(), function (Blueprint $table) {
+
+            if(config("guard-shield.provider.users.key_type") === "uuid"){
+
+                $table->foreignUuid(config("guard-shield.provider.users.id"))
+                ->constrained(Table::Users())
                 ->onDelete('cascade');
-            $table->foreignId('role_id')->constrained("guard_shield_roles")->onDelete('cascade');
+
+            }else{
+
+                $table->foreignId(config("guard-shield.provider.users.id"))
+                ->constrained(Table::Users())
+                ->onDelete('cascade');
+
+            }
+
+            $table->foreignId('role_id')->constrained(Table::Roles())->onDelete('cascade');
 
             $table->index([config("guard-shield.provider.users.id"), "role_id"]);
 
@@ -29,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('guard_shield_assigns_roles');
+        Schema::dropIfExists(Table::AssignsRoles());
     }
 };

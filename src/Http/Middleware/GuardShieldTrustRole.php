@@ -18,12 +18,12 @@ class GuardShieldTrustRole
         $user = $request->user();
 
         if(!$user)
-            abort(403, "Access Unauthorized!");
+            abort(401, "Access Unauthorized!");
 
         $roles = $user->roles()->whereIn('name', $role);
 
         if($roles->doesntExist())
-            abort(403, "Access Unauthorized!");
+            abort(401, "Access Unauthorized!");
 
         return $next($request);
     }

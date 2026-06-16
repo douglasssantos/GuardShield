@@ -2,7 +2,31 @@
 
 return [
     "provider" => [
+        "models" => [
+            "load-migrations" => true,
+            "permissions" => [
+                "model" => \Larakeeps\GuardShield\Models\Permission::class,
+                "database" => "guard_shield_permissions"
+            ],
+            "roles" => [
+                "model" => \Larakeeps\GuardShield\Models\Role::class,
+                "database" => "guard_shield_roles"
+            ],
+            "modules" => [
+                "model" => \Larakeeps\GuardShield\Models\Module::class,
+                "database" => "guard_shield_permissions_modules"
+            ],
+            "assigns" => [
+                "roles" => [
+                    "database" => "guard_shield_assigns_roles"
+                ],
+                "permissions" => [
+                    "database" => "guard_shield_assigns"
+                ],
+            ],
+        ],
         "users" => [
+            "key_type" => "uuid",
             "id" => "user_id",
             "model" => env('AUTH_MODEL', App\Models\User::class),
             'database' => 'users'

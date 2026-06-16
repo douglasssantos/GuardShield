@@ -10,9 +10,12 @@ class User extends Model
 {
     use GuardShield, HasFactory;
 
-    protected $table = 'users';
-
     protected $with = ['roles'];
     protected $guarded = ['id'];
+
+    public function getTable()
+    {
+        return Table::Users();
+    }
   
 }

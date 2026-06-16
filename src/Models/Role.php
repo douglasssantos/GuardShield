@@ -11,13 +11,16 @@ class Role extends Model
 {
     use HasFactory;
 
-    protected $table = "guard_shield_roles";
-
     protected $with = ['permissions'];
 
     protected $guarded = ["id"];
 
     protected $hidden = ['pivot', "created_at", "updated_at"];
+
+    public function getTable()
+    {
+        return Table::Roles();
+    }
 
     public function scopeGetRole($query, $name)
     {
@@ -94,7 +97,7 @@ class Role extends Model
 
     public function permissions()
     {
-        return $this->belongsToMany(Permission::class, "guard_shield_assigns");
+        return $this->belongsToMany(Permission::class, Table::AssignsPermissions());
     }
 
     protected static function boot()

@@ -4,6 +4,7 @@ namespace Larakeeps\GuardShield\Traits;
 
 use Illuminate\Support\Str;
 use Larakeeps\GuardShield\Models\Role;
+use Larakeeps\GuardShield\Models\Table;
 
 trait GuardShield
 {
@@ -38,7 +39,7 @@ trait GuardShield
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, "guard_shield_assigns_roles")
+        return $this->belongsToMany(Role::class, Table::AssignsRoles())
             ->with("permissions");
     }
 

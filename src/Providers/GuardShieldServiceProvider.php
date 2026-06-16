@@ -31,6 +31,8 @@ class GuardShieldServiceProvider extends ServiceProvider
             __DIR__."/../../config/guard-shield.php" => config_path('guard-shield.php'),
         ], "guard-shield-config");
 
+        if(config("guard-shield.provider.users.model") === null)
+            throw new \Exception("Please set the user model in the config file of Guard Shield!");
         $this->loadMigrationsFrom(self::ROOT_PATH . '/database/migrations');
         $this->publishes([
             self::ROOT_PATH.'/database/migrations/2024_01_01_211442_create_guard_shield_permissions_table.php' => database_path('migrations/2024_01_01_211442_create_guard_shield_permissions_table.php'),

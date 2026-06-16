@@ -10,16 +10,18 @@ class Permission extends Model
 {
     use HasFactory;
 
-    protected $table = "guard_shield_permissions";
-
     protected $guarded = ['id'];
 
     protected $hidden = ['pivot', "created_at", "updated_at"];
 
+    public function getTable()
+    {
+        return Table::Permissions();
+    }
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, "guard_shield_assigns");
+        return $this->belongsToMany(Role::class, Table::AssignsPermissions());
     }
 
     public function scopeGetPermission($query, $name)

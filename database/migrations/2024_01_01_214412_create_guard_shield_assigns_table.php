@@ -5,6 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Larakeeps\GuardShield\Models\Permission;
 use Larakeeps\GuardShield\Models\Role;
+use Larakeeps\GuardShield\Models\Table;
 
 return new class extends Migration
 {
@@ -13,10 +14,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('guard_shield_assigns', function (Blueprint $table) {
+        Schema::create(Table::AssignsPermissions(), function (Blueprint $table) {
             $table->id();
-            $table->foreignId('role_id')->constrained("guard_shield_roles")->onDelete('cascade');
-            $table->foreignId('permission_id')->constrained("guard_shield_permissions")->onDelete('cascade');
+            $table->foreignId('role_id')->constrained(Table::Roles())->onDelete('cascade');
+            $table->foreignId('permission_id')->constrained(Table::Permissions())->onDelete('cascade');
             $table->index(['role_id', 'permission_id']);
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('guard_shield_assigns');
+        Schema::dropIfExists(Table::AssignsPermissions());
     }
 };

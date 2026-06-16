@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Larakeeps\GuardShield\Models\Table;
 
 return new class extends Migration
 {
@@ -11,7 +12,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('guard_shield_permissions_modules', function (Blueprint $table) {
+
+        Schema::create(Table::Modules(), function (Blueprint $table) {
             $table->id();
             $table->string("key")->nullable();
             $table->string("name");
@@ -20,9 +22,9 @@ return new class extends Migration
             $table->index(["key", "name"]);
         });
 
-        Schema::create('guard_shield_permissions', function (Blueprint $table) {
+        Schema::create(Table::Permissions(), function (Blueprint $table) {
             $table->id();
-            $table->foreignId('module_id')->nullable()->constrained("guard_shield_permissions_modules")->nullOnDelete('cascade');
+            $table->foreignId('module_id')->nullable()->constrained(Table::Modules())->nullOnDelete('cascade');
             $table->string("key")->nullable();
             $table->string("name");
             $table->string('description')->nullable();
@@ -39,6 +41,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('guard_shield_permissions');
+        Schema::dropIfExists(Table::Permissions());
+        Schema::dropIfExists(Table::Modules());
     }
 };

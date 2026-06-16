@@ -11,11 +11,14 @@ class Module extends Model
 {
     use HasFactory;
 
-    protected $table = "guard_shield_permissions_modules";
-
     protected $guarded = ['id'];
 
     protected $hidden = ["created_at", "updated_at"];
+
+    public function getTable()
+    {
+        return Table::Modules();
+    }
 
 
     public function permissions()
