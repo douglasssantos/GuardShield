@@ -26,7 +26,7 @@ return [
             ],
         ],
         "users" => [
-            "key_type" => "uuid",
+            "key_type" => "id",
             "id" => "user_id",
             "model" => env('AUTH_MODEL', App\Models\User::class),
             'database' => 'users'
